@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Platform](https://img.shields.io/badge/platform-Linux-yellow.svg)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20WSL-blue.svg)
 
 **Una herramienta CLI elegante para gestionar repositorios de Bitbucket Cloud**
 
@@ -27,17 +27,53 @@
 
 ### Prerrequisitos
 
-- Python 3.8+
-- Git
-- Acceso a Internet (para conectar con la API de Bitbucket)
+- **[Python 3.8+](https://www.python.org/downloads/)** — Lenguaje de programación
+- **[Git](https://git-scm.com/downloads)** — Control de versiones (para clonar repos)
+- **[pip](https://pip.pypa.io/en/stable/installation/)** — Gestor de paquetes de Python
+- **Acceso a Internet** — Para conectar con la API de Bitbucket
+
+#### Instalación por sistema operativo
+
+<details>
+<summary><b>🐧 Linux (Debian/Ubuntu)</b></summary>
+
+```bash
+sudo apt update
+sudo apt install python3 python3-pip git -y
+```
+</details>
+
+<details>
+<summary><b>🍎 macOS</b></summary>
+
+```bash
+# Con Homebrew
+brew install python git
+```
+</details>
+
+<details>
+<summary><b>🪟 Windows (WSL)</b></summary>
+
+```bash
+# Instala WSL primero, luego en tu terminal Linux:
+sudo apt update && sudo apt install python3 python3-pip git -y
+```
+</details>
 
 ### Configuración
 
 1. **Clona o descarga este repositorio**
 
-2. **Configura el token de Bitbucket:**
+2. **Instala dependencias Python:**
 
-有两种方式配置 token：
+```bash
+pip install requests
+```
+
+3. **Configura las credenciales de Bitbucket:**
+
+Hay dos formas de configurar el token:
 
 #### Opción A: Archivo `.env` (Recomendado)
 
@@ -47,9 +83,12 @@ cp .env.example .env
 # Edita el archivo .env y reemplaza tu_token_aqui con tu token real
 ```
 
-El contenido de `.env` debe ser:
+El contenido de `.env` debe tener al menos estas variables (usa `.env.example` como guía):
+
 ```
 BB_TOKEN=tu_token_de_bitbucket
+BB_USERNAME=tu-email@example.com
+BB_WORKSPACE=tu-workspace
 ```
 
 #### Opción B: Variable de entorno
@@ -63,6 +102,17 @@ BB_TOKEN="tu_token_de_bitbucket" python3 repository_manager.py
 ```
 
 > ⚠️ **Nota:** El archivo `.env` contiene información sensible y está excluido del repositorio (`gitignore`). Nunca compartas este archivo.
+
+#### Variables de Entorno
+
+| Variable | Obligatorio | Descripción |
+|----------|-------------|-------------|
+| `BB_TOKEN` | ✅ Sí | Token de acceso personal de Bitbucket |
+| `BB_USERNAME` | ✅ Sí | Email o username de Bitbucket para autenticación |
+| `BB_WORKSPACE` | ✅ Sí | Workspace de Bitbucket (ej: `mi-empresa`) |
+| `DEV_DIR` | ❌ No | Directorio donde clonar repos (defecto: `~/bitbucket-repos`) |
+| `GIT_USER_NAME` | ❌ No | Nombre para git config en clones (defecto: `Your Name`) |
+| `GIT_USER_EMAIL` | ❌ No | Email para git config en clones (defecto: `your-email@example.com`) |
 
 #### ¿Cómo obtener tu token de Bitbucket?
 
@@ -116,19 +166,20 @@ bitbucket-repo-manager/
 
 ### Personalizar el directorio de desarrollo
 
-Por defecto, los repositorios se clonan en `/home/stefanov/farmu`. Para cambiar esto:
+Por defecto, los repositorios se clonan en `~/bitbucket-repos`. Para cambiar esto:
 
 ```bash
-export DEV_DIR="/tu/directorio/aqui"
+export DEV_DIR="/tu/directorio/de/proyectos"
 python3 repository_manager.py
 ```
 
 ### Cambiar el workspace de Bitbucket
 
-Edita la variable `USERNAME` en `repository_manager.py` para apuntar a otro workspace:
+Define el workspace via variable de entorno:
 
-```python
-USERNAME = "otro_workspace"
+```bash
+export BB_WORKSPACE="tu-workspace"
+python3 repository_manager.py
 ```
 
 ---
@@ -165,7 +216,7 @@ El token necesita permisos de lectura. Verifica que tenga los scopes `repo:read`
 
 ## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT - ve el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la Licencia MIT — ve el archivo `LICENSE` para más detalles.
 
 ---
 
@@ -177,8 +228,4 @@ Este proyecto está bajo la Licencia MIT - ve el archivo `LICENSE` para más det
 
 ---
 
-<div align="center">
-
-Hecho con ❤️ por [Alan Stefanov](https://www.linkedin.com/in/alanstefanov/)
-
-</div>
+*¿Te gusta este proyecto? ¡Échale un vistazo a mis otros trabajos en [GitHub](https://github.com/AlanStefanov)!*

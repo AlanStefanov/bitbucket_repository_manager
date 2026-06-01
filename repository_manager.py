@@ -19,10 +19,10 @@ def load_env_file():
 
 load_env_file()
 
-USERNAME = "farmu"
-DEV_DIR = os.environ.get("DEV_DIR", "/home/stefanov/farmu")
+USERNAME = os.environ.get("BB_WORKSPACE", "your-workspace")
+DEV_DIR = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
 BB_TOKEN = os.environ.get("BB_TOKEN")
-BB_AUTH = ("alan.stefanov@farmu.com.co", BB_TOKEN) if BB_TOKEN else (None, None)
+BB_AUTH = (os.environ.get("BB_USERNAME"), BB_TOKEN) if BB_TOKEN else (None, None)
 
 def get_repos():
     if not BB_AUTH[1]:
@@ -32,7 +32,7 @@ def get_repos():
     try:
         all_repos = []
         
-        repos_url = "https://api.bitbucket.org/2.0/repositories/farmu?pagelen=100"
+        repos_url = f"https://api.bitbucket.org/2.0/repositories/{USERNAME}?pagelen=100"
         
         while repos_url:
             response = requests.get(repos_url, auth=BB_AUTH, timeout=10)
@@ -49,8 +49,8 @@ def get_repos():
                 all_repos.append({
                     'name': repo['name'],
                     'url': repo['links']['html']['href'],
-                    'workspace': 'farmu',
-                    'ws_slug': 'farmu',
+                    'workspace': USERNAME,
+                    'ws_slug': USERNAME,
                     'updated': updated_dt,
                     'updated_str': updated[:10] if updated else 'N/A'
                 })
@@ -79,8 +79,8 @@ def clone_repo(repo_name, ws_slug=None):
         result = subprocess.run(['git', 'clone', repo_url, target_dir], 
                                 capture_output=True, text=True)
         if result.returncode == 0:
-            subprocess.run(['git', 'config', 'user.name', 'Alan Stefanov'], cwd=target_dir)
-            subprocess.run(['git', 'config', 'user.email', 'alan.stefanov@gmail.com'], cwd=target_dir)
+            subprocess.run(['git', 'config', 'user.name', os.environ.get('GIT_USER_NAME', 'Your Name')], cwd=target_dir)
+            subprocess.run(['git', 'config', 'user.email', os.environ.get('GIT_USER_EMAIL', 'your-email@example.com')], cwd=target_dir)
             return True, f"Repositorio clonado en: {target_dir}"
         return False, result.stderr
     except Exception as e:
@@ -90,7 +90,7 @@ def draw_menu(stdscr, repos, selected, cloned_status, search_query=""):
     stdscr.clear()
     h, w = stdscr.getmaxyx()
     
-    title = "REPOSITORY MANAGER - Bitbucket/farmu"
+    title = "REPOSITORY MANAGER - Bitbucket"
     stdscr.addstr(0, (w - len(title)) // 2, title, curses.A_BOLD)
     stdscr.addstr(1, 0, "=" * (w - 1))
     stdscr.addstr(2, 0, f"{'#':<3} {'Nombre':<30} {'Proyecto':<22} {'Última act.':<10} {'Estado':<8}")
