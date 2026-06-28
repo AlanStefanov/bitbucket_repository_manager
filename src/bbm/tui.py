@@ -76,14 +76,28 @@ def search_repos(stdscr, repos):
     return search_query
 
 
+def _show_splash(stdscr, message):
+    h, w = stdscr.getmaxyx()
+    stdscr.clear()
+    stdscr.addstr(h // 2, (w - len(message)) // 2, message)
+    stdscr.refresh()
+
+
 def run_tui(stdscr):
     curses.curs_set(0)
+    _show_splash(stdscr, "Cargando repositorios de Bitbucket...")
 
-    print("Cargando repositorios de Bitbucket...")
-    repos = get_repos()
+    with _silent_stdout():
+        repos = get_repos()
 
     if not repos:
-        print("No se pudieron obtener los repositorios.")
+        h, w = stdscr.getmaxyx()
+        stdscr.clear()
+        msg = "No se pudieron obtener los repositorios."
+        stdscr.addstr(h // 2, (w - len(msg)) // 2, msg)
+        hint = "Presioná cualquier tecla para salir."
+        stdscr.addstr(h // 2 + 2, (w - len(hint)) // 2, hint, curses.A_DIM)
+        stdscr.getch()
         return
 
     dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
@@ -124,8 +138,9 @@ def run_tui(stdscr):
             filtered_cloned = cloned_status
             selected = 0
         elif key == ord('r') or key == ord('R'):
-            print("\nRefrescando...")
-            repos = get_repos()
+            _show_splash(stdscr, "Refrescando...")
+            with _silent_stdout():
+                repos = get_repos()
             cloned_status = [
                 os.path.exists(os.path.join(dev_dir, r['name'])) and
                 os.path.isdir(os.path.join(dev_dir, r['name'], '.git'))
