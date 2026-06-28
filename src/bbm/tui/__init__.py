@@ -4,6 +4,7 @@ from textual.app import App
 
 from .splash import BootScreen
 from .home import HomeScreen
+from .dashboard_screen import DashboardScreen
 from .explorer import ExplorerScreen
 from .permissions_screen import PermissionsScreen
 from .pr_screen import PRScreen
@@ -17,6 +18,7 @@ class BBMApp(App):
     SCREENS = {
         "boot": BootScreen,
         "home": HomeScreen,
+        "dashboard": DashboardScreen,
         "explorer": ExplorerScreen,
         "permissions": PermissionsScreen,
         "pr": PRScreen,
@@ -25,7 +27,10 @@ class BBMApp(App):
         "deps": DepsScreen,
     }
 
-    TITLE = "BBM — Bitbucket Repository Manager"
+    TITLE = "BRM — Bitbucket Repository Manager"
+    BINDINGS = [
+        ("ctrl+q", "quit", "Salir"),
+    ]
 
     def on_mount(self) -> None:
         self.push_screen("boot")

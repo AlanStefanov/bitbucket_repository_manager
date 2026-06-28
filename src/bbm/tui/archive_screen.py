@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Button, DataTable, Input, Label, Static
+from textual.widgets import Button, DataTable, Footer, Input, Label, Static
 
 from bbm.api import get_repos, update_repository
 from bbm.config import get_auth
@@ -13,8 +13,9 @@ from bbm.config import get_auth
 
 class ArchiveScreen(Screen):
     BINDINGS = [
-        ("q", "go_home", "Volver"),
-        ("escape", "go_home", "Volver"),
+        ("h", "go_home", "Home"),
+        ("escape", "go_home", "Home"),
+        ("ctrl+q", "quit_app", "Salir"),
     ]
 
     def __init__(self) -> None:
@@ -50,6 +51,7 @@ class ArchiveScreen(Screen):
             classes="content-area",
         )
         yield Static("", id="arc-status", classes="status-bar")
+        yield Footer()
 
     def on_mount(self) -> None:
         self.run_worker(self._load_repos())
@@ -136,3 +138,6 @@ class ArchiveScreen(Screen):
     def action_go_home(self) -> None:
         from .home import HomeScreen
         self.app.switch_screen(HomeScreen())
+
+    def action_quit_app(self) -> None:
+        self.app.exit()

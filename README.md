@@ -1,7 +1,7 @@
 <div align="center">
 
 [![CI](https://github.com/AlanStefanov/bitbucket_repository_manager/actions/workflows/ci.yml/badge.svg)](https://github.com/AlanStefanov/bitbucket_repository_manager/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Version](https://img.shields.io/badge/version-0.1.0--alpha-orange.svg)
 
@@ -33,6 +33,7 @@ De un explorador TUI simple a una **suite completa** para administrar Bitbucket 
 
 | Feature | Estado |
 |---------|--------|
+| Dashboard de workspace | ✅ Listo |
 | Explorador + clonado de repos | ✅ Listo |
 | Gestión masiva de permisos | 🚧 En desarrollo |
 | Auto-aprobación de PRs | 🚧 En desarrollo |
@@ -136,18 +137,28 @@ La app está diseñada para uso 100% con teclado. Sin mouse requerido.
 |-------|--------|
 | `↑` / `↓` | Navegar entre cards |
 | `←` / `→` | Navegar entre cards |
+| `Tab` / `Shift+Tab` | Navegar entre cards |
 | `Enter` | Abrir pantalla seleccionada |
-| `q` / `Q` | Salir de la app |
+| `F1` | Dashboard |
+| `F2` | Repos |
+| `F3` | Permisos |
+| `F4` | PRs |
+| `F5` | Migración |
+| `F6` | Archive |
+| `F7` | Dependencias |
+| `Q` | Salir de la app |
 | `Esc` | Salir de la app |
+| `Ctrl+Q` | Salir de la app |
 
 ### Pantallas de feature
 
 | Tecla | Acción |
 |-------|--------|
+| `H` | Volver al menú principal |
 | `Esc` | Volver al menú principal |
-| `q` / `Q` | Salir de la app |
 | `Ctrl+Q` | Salir de la app |
 | `Tab` / `Shift+Tab` | Navegar entre controles |
+| `Ctrl+R` | Refrescar (Explorer / Dashboard) |
 
 ### Controles comunes
 

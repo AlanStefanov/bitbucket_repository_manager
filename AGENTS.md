@@ -1,27 +1,26 @@
-# Session: 2026-06-28 — TUI Rewrite (curses → Textual)
+# Session: 2026-06-28 — Mejoras TUI BRM
 
-## What we did
-- Replaced curses TUI with **Textual 8.x** framework
-- Created 6 feature screens: Explorer, Permissions, PR, Migration, Archive, Deps
-- Home screen with 6 responsive cards, keyboard nav (↑↓←→ + Enter)
-- Animated boot splash with step indicators
-- Removed all CLI code (cli.py, permissions.py, pr_approval.py, migration.py, archiving.py, deps.py)
-- Entry point: `bbm = bbm.tui:run_tui`
-- Dependencies: textual, rich, requests, pyyaml
-- Rewrote README.md with vision, roadmap (US1-US6), keybindings, stack
-- All 6 screens verified working with Textual test probe
+## Estado actual
+- Logo ASCII cambiado de BBM → BRM
+- Agregado Footer con keybindings en todas las pantallas (estilo Opencode)
+- Navegación mejorada: F1-F7 para acceso directo a cada pantalla desde Home
+- Keybindings consistentes: `H` → Home, `Esc` → Home, `Ctrl+Q` → Salir
+- Nueva pantalla **Dashboard** (F1): métricas del workspace (repos, PRs abiertos, activos, stale)
+- 7 tarjetas en Home: Dashboard, Repos, Permisos, PRs, Migración, Archive, Deps
+- Target: devs y líderes técnicos
 
-## Key decisions
-- Pure TUI, no CLI subcommands
-- Dark theme `#10b981` accent
-- Auth: Basic (email + API Token from id.atlassian.com)
-- Permissions/Migration/Archive use sidebar layout; Explorer/PR/Deps use full-width + docked action bar
-
-## Keyboard
-- Home: ↑↓←→ + Enter to open, Escape/Q to quit
-- Feature screens: Escape → Home, Ctrl+Q/Q → quit
+## Atajos globales
+| Tecla | Acción |
+|-------|--------|
+| `H` / `Esc` | Home |
+| `Ctrl+Q` | Salir |
+| `F1` | Dashboard |
+| `F2` | Repos |
+| `F3` | Permisos |
+| `F4` | PRs |
+| `F5` | Migración |
+| `F6` | Archive |
+| `F7` | Dependencias |
 
 ## Files
-`src/bbm/tui/` — all screens + styles.tcss + widgets.py
-`run.sh` — `PYTHONPATH=src exec python3 -m bbm`
-`.env` — working credentials (39 repos from `farmu`)
+`src/bbm/tui/dashboard_screen.py` — nueva pantalla de métricas

@@ -7,7 +7,7 @@ from collections import defaultdict
 from textual.app import ComposeResult
 from textual.containers import Horizontal
 from textual.screen import Screen
-from textual.widgets import Button, DataTable, Static
+from textual.widgets import Button, DataTable, Footer, Static
 
 from bbm.api import get_repos
 from bbm.config import get_auth
@@ -15,8 +15,9 @@ from bbm.config import get_auth
 
 class DepsScreen(Screen):
     BINDINGS = [
-        ("q", "go_home", "Volver"),
-        ("escape", "go_home", "Volver"),
+        ("h", "go_home", "Home"),
+        ("escape", "go_home", "Home"),
+        ("ctrl+q", "quit_app", "Salir"),
     ]
 
     def __init__(self) -> None:
@@ -35,6 +36,7 @@ class DepsScreen(Screen):
             classes="action-bar",
         )
         yield Static("", id="deps-status", classes="status-bar")
+        yield Footer()
 
     def on_mount(self) -> None:
         self._update_status("[dim]Presioná 'Escanear' para analizar[/]")
@@ -148,3 +150,6 @@ class DepsScreen(Screen):
     def action_go_home(self) -> None:
         from .home import HomeScreen
         self.app.switch_screen(HomeScreen())
+
+    def action_quit_app(self) -> None:
+        self.app.exit()

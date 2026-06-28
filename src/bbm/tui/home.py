@@ -4,11 +4,12 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.events import Resize
 from textual.screen import Screen
-from textual.widgets import Static
+from textual.widgets import Footer, Static
 
 from ..version import VERSION
 
 CARDS: list[tuple[str, str, str, str]] = [
+    ("📊", "Dashboard", "Resumen del workspace para devs y líderes", "dashboard"),
     ("📦", "Repos", "Explorar y clonar repositorios del workspace", "explorer"),
     ("🔐", "Permisos", "Gestionar accesos de usuarios por repositorio", "permissions"),
     ("✅", "PRs", "Auto-aprobar Pull Requests con reglas", "pr"),
@@ -36,6 +37,7 @@ class FeatureCard(Vertical):
         self._go()
 
     def _go(self) -> None:
+        from .dashboard_screen import DashboardScreen
         from .explorer import ExplorerScreen
         from .permissions_screen import PermissionsScreen
         from .pr_screen import PRScreen
@@ -44,6 +46,7 @@ class FeatureCard(Vertical):
         from .deps_screen import DepsScreen
 
         screen_map = {
+            "dashboard": DashboardScreen,
             "explorer": ExplorerScreen,
             "permissions": PermissionsScreen,
             "pr": PRScreen,
@@ -63,8 +66,18 @@ class HomeScreen(Screen):
         ("down", "down", "Abajo"),
         ("left", "left", "Izquierda"),
         ("right", "right", "Derecha"),
+        ("tab", "tab", "Siguiente"),
+        ("shift+tab", "shift_tab", "Anterior"),
+        ("f1", "go_dashboard", "Dashboard"),
+        ("f2", "go_explorer", "Repos"),
+        ("f3", "go_permissions", "Permisos"),
+        ("f4", "go_pr", "PRs"),
+        ("f5", "go_migration", "Migración"),
+        ("f6", "go_archive", "Archive"),
+        ("f7", "go_deps", "Deps"),
         ("q", "quit_app", "Salir"),
         ("escape", "quit_app", "Salir"),
+        ("ctrl+q", "quit_app", "Salir"),
     ]
 
     def compose(self) -> ComposeResult:
@@ -79,22 +92,19 @@ class HomeScreen(Screen):
 
         yield Vertical(
             Static(
-                "[bold #10b981]██████╗ ██████╗ ███╗   ███╗[/]"
-                "\n[bold #10b981]██╔══██╗██╔══██╗████╗ ████║[/]"
-                "\n[bold #10b981]██████╔╝██████╔╝██╔████╔██║[/]"
-                "\n[bold #10b981]██╔══██╗██╔══██╗██║╚██╔╝██║[/]"
-                "\n[bold #10b981]██████╔╝██████╔╝██║ ╚═╝ ██║[/]"
-                "\n[bold #10b981]╚═════╝ ╚═════╝ ╚═╝     ╚═╝[/]",
+                "[bold #10b981]██████╗  ██████╗ ███╗   ███╗[/]"
+                "\n[bold #10b981]██╔══██╗ ██╔══██╗████╗ ████║[/]"
+                "\n[bold #10b981]██████╔╝ ██████╔╝██╔████╔██║[/]"
+                "\n[bold #10b981]██╔══██╗ ██╔══██╗██║╚██╔╝██║[/]"
+                "\n[bold #10b981]██████╔╝ ██║  ██║██║ ╚═╝ ██║[/]"
+                "\n[bold #10b981]╚═════╝  ╚═╝  ╚═╝╚═╝     ╚═╝[/]",
                 id="home-brand",
             ),
             Static(f"[dim]Bitbucket Repository Manager  v{VERSION}[/]", id="home-title"),
             Vertical(*rows, id="home-cards"),
-            Static(
-                "[dim]Seleccioná con [/dim][#10b981]↑↓←→[/]  [dim]y presioná [/dim][#10b981]Enter[/]  [dim]— [/dim][#10b981]Q[/][dim] / [/dim][#10b981]Esc[/][dim] para salir[/]",
-                id="home-hints",
-            ),
             id="home-root",
         )
+        yield Footer()
 
     def on_mount(self) -> None:
         self._apply_responsive(self.size.width, self.size.height)
@@ -169,3 +179,49 @@ class HomeScreen(Screen):
 
     def action_quit_app(self) -> None:
         self.app.exit()
+
+    def action_tab(self) -> None:
+        cards = self._cards()
+        i = self._idx()
+        if i >= 0 and i < len(cards) - 1:
+            cards[i + 1].focus()
+        else:
+            if cards:
+                cards[0].focus()
+
+    def action_shift_tab(self) -> None:
+        cards = self._cards()
+        i = self._idx()
+        if i > 0:
+            cards[i - 1].focus()
+        else:
+            if cards:
+                cards[-1].focus()
+
+    def action_go_dashboard(self) -> None:
+        from .dashboard_screen import DashboardScreen
+        self.app.switch_screen(DashboardScreen())
+
+    def action_go_explorer(self) -> None:
+        from .explorer import ExplorerScreen
+        self.app.switch_screen(ExplorerScreen())
+
+    def action_go_permissions(self) -> None:
+        from .permissions_screen import PermissionsScreen
+        self.app.switch_screen(PermissionsScreen())
+
+    def action_go_pr(self) -> None:
+        from .pr_screen import PRScreen
+        self.app.switch_screen(PRScreen())
+
+    def action_go_migration(self) -> None:
+        from .migration_screen import MigrationScreen
+        self.app.switch_screen(MigrationScreen())
+
+    def action_go_archive(self) -> None:
+        from .archive_screen import ArchiveScreen
+        self.app.switch_screen(ArchiveScreen())
+
+    def action_go_deps(self) -> None:
+        from .deps_screen import DepsScreen
+        self.app.switch_screen(DepsScreen())

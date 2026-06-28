@@ -3,7 +3,7 @@ from __future__ import annotations
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Button, Input, Label, Select, Static
+from textual.widgets import Button, Footer, Input, Label, Select, Static
 
 from bbm.api import (
     delete_user_permission,
@@ -17,8 +17,9 @@ from bbm.config import get_auth
 
 class PermissionsScreen(Screen):
     BINDINGS = [
-        ("q", "go_home", "Volver"),
-        ("escape", "go_home", "Volver"),
+        ("h", "go_home", "Home"),
+        ("escape", "go_home", "Home"),
+        ("ctrl+q", "quit_app", "Salir"),
     ]
 
     def __init__(self) -> None:
@@ -58,6 +59,7 @@ class PermissionsScreen(Screen):
             classes="content-area",
         )
         yield Static("", id="perm-status", classes="status-bar")
+        yield Footer()
 
     def on_mount(self) -> None:
         self.run_worker(self._load_repos())
@@ -152,3 +154,6 @@ class PermissionsScreen(Screen):
     def action_go_home(self) -> None:
         from .home import HomeScreen
         self.app.switch_screen(HomeScreen())
+
+    def action_quit_app(self) -> None:
+        self.app.exit()

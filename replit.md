@@ -1,9 +1,9 @@
-# BBM — Bitbucket Repository Manager
+# BRM — Bitbucket Repository Manager
 
 ## Overview
-`bbm` is a terminal user interface (TUI) for managing Bitbucket Cloud repositories,
+`brm` is a terminal user interface (TUI) for managing Bitbucket Cloud repositories,
 built with the [Textual](https://textual.textualize.io/) framework. It offers screens
-for repository exploration, mass permission management, PR auto-approval, project
+for workspace dashboard, repository exploration, mass permission management, PR auto-approval, project
 migration, smart archiving, and dependency analysis.
 
 This is a **pure TUI application** that runs directly in the terminal (Shell).

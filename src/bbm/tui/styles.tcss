@@ -312,6 +312,42 @@ Label {
     text-align: center;
 }
 
+/* ── Dashboard ──────────────────────────────────────────── */
+#dash-metrics {
+    height: auto;
+    margin: 1 2;
+}
+
+.dash-box {
+    width: 1fr;
+    height: auto;
+    background: #111;
+    border: solid #1a1a1a;
+    margin: 0 1;
+    padding: 1 2;
+    align: center middle;
+}
+
+.dash-metric-label {
+    color: #888;
+    text-align: center;
+    height: 1;
+}
+
+.dash-metric-value {
+    color: #10b981;
+    text-style: bold;
+    text-align: center;
+    height: 2;
+}
+
+.dash-section-title {
+    color: #d4d4d4;
+    padding: 0 2;
+    height: 1;
+    margin-top: 1;
+}
+
 /* ── Footer ─────────────────────────────────────────────── */
 Footer {
     background: #111;
