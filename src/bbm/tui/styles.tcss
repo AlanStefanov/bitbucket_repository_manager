@@ -3,7 +3,7 @@ Screen {
 }
 
 ScrollableContainer {
-    height: 1fr;
+    height: auto;
 }
 
 /* ── Screen layout ──────────────────────────────────────── */
