@@ -1,7 +1,7 @@
 import os
 import subprocess
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 
 from bbm.config import get_auth, load_env_file
 
@@ -44,7 +44,7 @@ def get_repos(workspace=None):
                 try:
                     updated_dt = datetime.fromisoformat(updated.replace('Z', '+00:00'))
                 except Exception:
-                    updated_dt = datetime.min
+                    updated_dt = datetime.min.replace(tzinfo=timezone.utc)
                 all_repos.append({
                     'name': repo['name'],
                     'url': repo['links']['html']['href'],
@@ -90,6 +90,74 @@ def clone_repo(repo_name, workspace=None):
     except Exception as e:
         return False, str(e)
 
+
+def pull_repo(repo_name, workspace=None):
+    _, _, ws = get_auth()
+    workspace = workspace or ws
+    dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
+    target_dir = os.path.join(dev_dir, repo_name)
+
+    if not os.path.isdir(os.path.join(target_dir, '.git')):
+        return False, f"{repo_name} no está clonado en {target_dir}"
+
+    try:
+        result = subprocess.run(['git', '-C', target_dir, 'pull'],
+                                capture_output=True, text=True)
+        if result.returncode == 0:
+            return True, result.stdout.strip() or "Pull exitoso"
+        return False, result.stderr
+    except Exception as e:
+        return False, str(e)
+
+
+def get_repo_branches(repo_name):
+    dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
+    target_dir = os.path.join(dev_dir, repo_name)
+
+    if not os.path.isdir(os.path.join(target_dir, '.git')):
+        return None
+
+    try:
+        result = subprocess.run(['git', '-C', target_dir, 'branch', '-a'],
+                                capture_output=True, text=True)
+        if result.returncode != 0:
+            return None
+        branches = []
+        for line in result.stdout.strip().split("\n"):
+            line = line.strip()
+            if not line or line.startswith("HEAD") or "HEAD ->" in line:
+                continue
+            if line.startswith("* "):
+                branches.append(line[2:].strip())
+            elif line.startswith("remotes/origin/"):
+                b = line.replace("remotes/origin/", "").strip()
+                if b and b not in branches and b != "HEAD":
+                    branches.append(b)
+            else:
+                b = line.strip()
+                if b and b not in branches:
+                    branches.append(b)
+        return branches
+    except Exception:
+        return None
+
+
+def checkout_repo(repo_name, branch):
+    dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
+    target_dir = os.path.join(dev_dir, repo_name)
+
+    if not os.path.isdir(os.path.join(target_dir, '.git')):
+        return False, f"{repo_name} no está clonado"
+
+    try:
+        result = subprocess.run(['git', '-C', target_dir, 'checkout', branch],
+                                capture_output=True, text=True)
+        if result.returncode == 0:
+            return True, f"Checkout a '{branch}' exitoso"
+        return False, result.stderr
+    except Exception as e:
+        return False, str(e)
+
 def get_permissions_users(workspace, repo):
     auth = _http_auth()
     if not auth:
@@ -99,6 +167,8 @@ def get_permissions_users(workspace, repo):
         r = requests.get(url, auth=auth, timeout=10)
         if r.status_code == 200:
             return r.json().get('values', [])
+        if r.status_code in (401, 403):
+            return []  # No tenemos permiso de admin en este repo; no es un error fatal
         print(f"  Error al obtener permisos de usuarios: {r.status_code}")
         return None
     except Exception as e:
@@ -114,6 +184,8 @@ def get_permissions_groups(workspace, repo):
         r = requests.get(url, auth=auth, timeout=10)
         if r.status_code == 200:
             return r.json().get('values', [])
+        if r.status_code in (401, 403):
+            return []  # No tenemos permiso de admin en este repo
         print(f"  Error al obtener permisos de grupos: {r.status_code}")
         return None
     except Exception as e:

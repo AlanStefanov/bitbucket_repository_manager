@@ -19,6 +19,7 @@ class DashboardScreen(Screen):
 
     BINDINGS = [
         ("h", "go_home", "Home"),
+        ("b", "go_home", "Home"),
         ("escape", "go_home", "Home"),
         ("ctrl+q", "quit_app", "Salir"),
         ("r", "refresh", "Refrescar"),
@@ -87,15 +88,19 @@ class DashboardScreen(Screen):
 
         for repo in self._repos[:50]:
             updated = repo.get("updated")
-            if updated and isinstance(updated, str):
+            dt: datetime | None = None
+            if isinstance(updated, datetime):
+                dt = updated
+            elif updated and isinstance(updated, str):
                 try:
                     dt = datetime.fromisoformat(updated.replace("Z", "+00:00"))
-                    if dt > cutoff_7d:
-                        active_count += 1
-                    if dt < cutoff_90d:
-                        stale_count += 1
                 except Exception:
-                    pass
+                    dt = None
+            if dt:
+                if dt > cutoff_7d:
+                    active_count += 1
+                if dt < cutoff_90d:
+                    stale_count += 1
 
             prs = get_pullrequests(workspace, repo["name"], state="OPEN")
             if prs:

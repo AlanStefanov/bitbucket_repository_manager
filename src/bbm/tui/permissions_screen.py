@@ -18,6 +18,7 @@ from bbm.config import get_auth
 class PermissionsScreen(Screen):
     BINDINGS = [
         ("h", "go_home", "Home"),
+        ("b", "go_home", "Home"),
         ("escape", "go_home", "Home"),
         ("ctrl+q", "quit_app", "Salir"),
     ]

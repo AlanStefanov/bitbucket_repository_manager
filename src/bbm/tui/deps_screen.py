@@ -16,6 +16,7 @@ from bbm.config import get_auth
 class DepsScreen(Screen):
     BINDINGS = [
         ("h", "go_home", "Home"),
+        ("b", "go_home", "Home"),
         ("escape", "go_home", "Home"),
         ("ctrl+q", "quit_app", "Salir"),
     ]
@@ -26,7 +27,14 @@ class DepsScreen(Screen):
 
     def compose(self) -> ComposeResult:
         yield Static("[bold #10b981]🔗  Dependencias[/]", id="screen-title")
-        yield Static("[dim]Análisis de dependencias entre repos[/]", id="screen-subtitle")
+        yield Static("[dim]Análisis de dependencias entre repos clonados[/]", id="screen-subtitle")
+        yield Static(
+            "[dim]Esta herramienta escanea los archivos de dependencias (setup.py, pyproject.toml, "
+            "requirements.txt, package.json) de tus repos clonados y detecta qué repos dependen de cuáles. "
+            "También puede identificar repos 'huérfanos' — aquellos que nadie referencia— para evaluar "
+            "si se pueden archivar o eliminar.[/]",
+            id="deps-help",
+        )
         yield DataTable(id="deps-table")
         yield Horizontal(
             Button("🔍 Escanear", id="scan-btn"),

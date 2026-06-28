@@ -12,6 +12,7 @@ from bbm.config import get_auth
 class PRScreen(Screen):
     BINDINGS = [
         ("h", "go_home", "Home"),
+        ("b", "go_home", "Home"),
         ("escape", "go_home", "Home"),
         ("ctrl+q", "quit_app", "Salir"),
     ]
@@ -50,8 +51,12 @@ class PRScreen(Screen):
 
         self._update_status("[yellow]Cargando PRs...[/]")
         total = 0
+        errors = 0
         for repo in self._repos[:20]:
             prs = get_pullrequests(workspace, repo["name"], state="OPEN")
+            if prs is None:
+                errors += 1
+                continue
             if not prs:
                 continue
             for pr in prs:
@@ -60,7 +65,12 @@ class PRScreen(Screen):
                 table.add_row(repo["name"], str(pr["id"]), pr["title"][:45], author, src)
                 total += 1
 
-        self._update_status(f"[dim]{total} PRs abiertos en {len(self._repos)} repos[/]")
+        if errors > 0:
+            self._update_status(
+                f"[dim]{total} PRs abiertos[/]  [yellow]({errors} repos con error de acceso)[/]"
+            )
+        else:
+            self._update_status(f"[dim]{total} PRs abiertos en {len(self._repos)} repos[/]")
 
     async def _auto_approve(self) -> None:
         await self._load_repos()

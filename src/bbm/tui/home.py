@@ -35,6 +35,7 @@ class FeatureCard(Vertical):
         yield Static(f"[dim]{self._desc}[/]", classes="card-desc")
 
     def on_click(self) -> None:
+        self.focus()
         self._go()
 
     def _go(self) -> None:
