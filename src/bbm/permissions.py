@@ -27,7 +27,7 @@ def _confirm(count, dry_run):
         return False
 
 def cmd_list(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -56,7 +56,7 @@ def cmd_list(args):
                 print("    (sin permisos de grupo")
 
 def cmd_grant(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -92,7 +92,7 @@ def cmd_grant(args):
     print(f"\n  Resultado: {ok} ok, {fail} errores")
 
 def cmd_revoke(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -124,7 +124,7 @@ def cmd_revoke(args):
     print(f"\n  Resultado: {ok} ok, {fail} errores")
 
 def cmd_copy(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -175,7 +175,7 @@ def cmd_copy(args):
                 print(f"  ✗ {t}: grupo {group} → {err}")
 
 def cmd_sync(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)

@@ -40,7 +40,7 @@ def _load_rules(path):
 
 
 def cmd_archive_scan(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -108,7 +108,7 @@ def cmd_archive_scan(args):
 
 
 def cmd_archive_run(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -187,7 +187,7 @@ def cmd_archive_run(args):
 
 
 def cmd_archive_restore(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -223,7 +223,7 @@ def cmd_archive_restore(args):
 
 
 def cmd_archive_list(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     archive_db = _load_archive_db()
     ws_archived = [s for s in archive_db if s['workspace'] == workspace]
 

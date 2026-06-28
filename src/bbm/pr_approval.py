@@ -55,7 +55,7 @@ def _pr_is_already_approved(pr):
 
 
 def cmd_auto_approve(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -136,7 +136,7 @@ def cmd_rules_list(args):
 
 
 def cmd_pr_check(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)

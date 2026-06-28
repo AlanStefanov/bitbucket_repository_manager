@@ -2,6 +2,7 @@ import os
 import subprocess
 import requests
 from datetime import datetime
+from requests.auth import AuthBase
 
 from bbm.config import get_auth, load_env_file
 
@@ -9,19 +10,32 @@ load_env_file()
 
 BASE_URL = "https://api.bitbucket.org/2.0"
 
-def _auth():
-    token, username, _ = get_auth()
-    if not token or not username:
+
+class _BearerAuth(AuthBase):
+    def __init__(self, token):
+        self.token = token
+    def __call__(self, r):
+        r.headers['Authorization'] = f'Bearer {self.token}'
+        return r
+
+
+def _http_auth():
+    token, username, _, auth_type = get_auth()
+    if not token:
         return None
-    return (username, token)
+    if auth_type == "basic" or (auth_type == "auto" and username):
+        if not username:
+            return None
+        return (username, token)
+    return _BearerAuth(token)
 
 def get_repos(workspace=None):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         print("Error: credenciales no configuradas")
         return []
 
-    _, _, ws = get_auth()
+    _, _, ws, _ = get_auth()
     workspace = workspace or ws
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
@@ -66,7 +80,7 @@ def _is_cloned(repo_name, dev_dir):
     return os.path.exists(target) and os.path.isdir(os.path.join(target, '.git'))
 
 def clone_repo(repo_name, workspace=None):
-    _, _, ws = get_auth()
+    _, _, ws, _ = get_auth()
     workspace = workspace or ws
     dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
     repo_url = f"git@bitbucket.org:{workspace}/{repo_name}.git"
@@ -90,7 +104,7 @@ def clone_repo(repo_name, workspace=None):
         return False, str(e)
 
 def get_permissions_users(workspace, repo):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return None
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/permissions-config/users"
@@ -105,7 +119,7 @@ def get_permissions_users(workspace, repo):
         return None
 
 def get_permissions_groups(workspace, repo):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return None
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/permissions-config/groups"
@@ -120,7 +134,7 @@ def get_permissions_groups(workspace, repo):
         return None
 
 def set_user_permission(workspace, repo, user, permission):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return False, "Credenciales no configuradas"
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/permissions-config/users/{user}"
@@ -133,7 +147,7 @@ def set_user_permission(workspace, repo, user, permission):
         return False, str(e)
 
 def delete_user_permission(workspace, repo, user):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return False, "Credenciales no configuradas"
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/permissions-config/users/{user}"
@@ -146,7 +160,7 @@ def delete_user_permission(workspace, repo, user):
         return False, str(e)
 
 def set_group_permission(workspace, repo, group, permission):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return False, "Credenciales no configuradas"
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/permissions-config/groups/{group}"
@@ -159,7 +173,7 @@ def set_group_permission(workspace, repo, group, permission):
         return False, str(e)
 
 def delete_group_permission(workspace, repo, group):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return False, "Credenciales no configuradas"
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/permissions-config/groups/{group}"
@@ -175,7 +189,7 @@ def delete_group_permission(workspace, repo, group):
 # ─── PRs ────────────────────────────────────────────────────────────────────
 
 def get_pullrequests(workspace, repo, state='OPEN', limit=50):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return None
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/pullrequests?state={state}&pagelen={limit}"
@@ -191,7 +205,7 @@ def get_pullrequests(workspace, repo, state='OPEN', limit=50):
 
 
 def approve_pullrequest(workspace, repo, pr_id):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return False, "Credenciales no configuradas"
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/pullrequests/{pr_id}/approve"
@@ -205,7 +219,7 @@ def approve_pullrequest(workspace, repo, pr_id):
 
 
 def unapprove_pullrequest(workspace, repo, pr_id):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return False, "Credenciales no configuradas"
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/pullrequests/{pr_id}/approve"
@@ -219,7 +233,7 @@ def unapprove_pullrequest(workspace, repo, pr_id):
 
 
 def get_branches(workspace, repo, limit=100):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return None
     url = f"{BASE_URL}/repositories/{workspace}/{repo}/refs/branches?pagelen={limit}"
@@ -235,7 +249,7 @@ def get_branches(workspace, repo, limit=100):
 
 
 def create_repository(workspace, repo_name, is_private=True):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return False, "Credenciales no configuradas"
     url = f"{BASE_URL}/repositories/{workspace}/{repo_name}"
@@ -250,7 +264,7 @@ def create_repository(workspace, repo_name, is_private=True):
 
 
 def update_repository(workspace, repo, data):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return False, "Credenciales no configuradas"
     url = f"{BASE_URL}/repositories/{workspace}/{repo}"
@@ -264,7 +278,7 @@ def update_repository(workspace, repo, data):
 
 
 def get_workspace_projects(workspace):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return None
     url = f"{BASE_URL}/workspaces/{workspace}/projects"
@@ -280,7 +294,7 @@ def get_workspace_projects(workspace):
 
 
 def upsert_workspace_project(workspace, project_key, name, description=""):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return None
     url = f"{BASE_URL}/workspaces/{workspace}/projects/{project_key}"
@@ -298,7 +312,7 @@ def upsert_workspace_project(workspace, project_key, name, description=""):
 
 
 def get_repository(workspace, repo):
-    auth = _auth()
+    auth = _http_auth()
     if not auth:
         return None
     url = f"{BASE_URL}/repositories/{workspace}/{repo}"

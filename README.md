@@ -131,14 +131,14 @@ BB_TOKEN="tu_token_de_bitbucket" bbm
 
 | Variable | Obligatorio | Descripción |
 |----------|-------------|-------------|
-| `BB_TOKEN` | ✅ Sí | Token de acceso personal de Bitbucket |
+| `BB_TOKEN` | ✅ Sí | API Token de Bitbucket (desde id.atlassian.com) |
 | `BB_USERNAME` | ✅ Sí | Email o username de Bitbucket |
 | `BB_WORKSPACE` | ✅ Sí | Workspace de Bitbucket (ej: `mi-empresa`) |
 | `DEV_DIR` | ❌ No | Directorio donde clonar repos (defecto: `~/bitbucket-repos`) |
 | `GIT_USER_NAME` | ❌ No | Nombre para git config en clones |
 | `GIT_USER_EMAIL` | ❌ No | Email para git config en clones |
 
-> 💡 ¿No tenés token? Mirá el [FAQ](#-faq--preguntas-frecuentes).
+> 💡 ¿No tenés token? [Mirá el FAQ →](#-faq--preguntas-frecuentes) — Crealo en https://id.atlassian.com/manage-profile/security/api-tokens (máx. 1 año de expiración)
 
 #### Ejecución desde el repositorio (sin instalar)
 
@@ -262,14 +262,16 @@ bbm
 
 ## ❓ FAQ — Preguntas Frecuentes
 
-### ¿Cómo obtengo un token de Bitbucket?
+### ¿Cómo obtengo un API Token de Bitbucket?
 
-1. Ve a **Bitbucket Settings** → **Personal access tokens** (o https://bitbucket.org/account/settings/app-passwords/)
-2. Creá un nuevo token con estos permisos mínimos:
+1. Andá a **https://id.atlassian.com/manage-profile/security/api-tokens**
+2. Creá un nuevo token con estos alcances mínimos:
    - `repository:read` — Listar y clonar repos
    - `workspace:management` — Leer workspaces
    - `account:read` — Información de usuario
-3. Copiá el token generado y ponelo en tu `.env`
+3. **Importante:** la expiración máxima es **1 año**
+4. Copiá el token generado y ponelo en tu `.env`
+5. Si también configurás `BB_USERNAME`, se usará autenticación Basic (compatible con tokens viejos). Si solo configurás `BB_TOKEN`, se usará autenticación Bearer (recomendado).
 
 ### ¿Cómo uso el archivo `.env`?
 
@@ -339,13 +341,19 @@ pipx install bbm
 bbm
 ```
 
-### ¿Qué permisos debo configurar en el App Password?
+### ¿Qué alcances necesita el API Token?
 
-Para gestionar permisos necesitás estos scopes:
-- `repository:admin` — Lectura y escritura de permisos
-- `workspace:management` — Lectura de workspaces
-- `account:read` — Información de usuario
-- `repository:read` — Listar y clonar repos
+Dependiendo de las operaciones que quieras hacer:
+
+| Operación | Alcances necesarios |
+|-----------|---------------------|
+| Explorar repos + clonar | `repository:read`, `workspace:management`, `account:read` |
+| Gestionar permisos | + `repository:admin` |
+| Auto-aprobar PRs | + `pullrequest:write` |
+| Migrar repos | + `repository:admin` (en origen y destino) |
+| Archivar repos | + `repository:admin` |
+
+> ⚠️ Si usás un API Token de id.atlassian.com, **no necesitás** `BB_USERNAME`. Solo `BB_TOKEN` es suficiente.
 
 ---
 

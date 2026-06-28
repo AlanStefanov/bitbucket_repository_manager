@@ -75,7 +75,7 @@ def _scan_repo_deps(repo_name, dev_dir, all_repo_names):
 
 
 def cmd_deps_scan(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
 
     all_repos = get_repos(workspace)
@@ -123,7 +123,7 @@ def cmd_deps_scan(args):
 
 
 def cmd_deps_tree(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
     all_repos = get_repos(workspace)
     all_names = [r['name'] for r in all_repos]
@@ -169,7 +169,7 @@ def cmd_deps_tree(args):
 
 
 def cmd_deps_orphans(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
     all_repos = get_repos(workspace)
     all_names = [r['name'] for r in all_repos]
@@ -205,7 +205,7 @@ def cmd_deps_orphans(args):
 
 
 def cmd_deps_cycles(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
     all_repos = get_repos(workspace)
     all_names = [r['name'] for r in all_repos]
@@ -254,7 +254,7 @@ def cmd_deps_cycles(args):
 
 
 def cmd_deps_impact(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
     all_repos = get_repos(workspace)
     all_names = [r['name'] for r in all_repos]

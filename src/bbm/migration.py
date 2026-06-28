@@ -66,7 +66,7 @@ def _estimate_migration_time(repo_name, workspace):
 
 
 def cmd_migrate_plan(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
@@ -107,7 +107,7 @@ def cmd_migrate_plan(args):
 
 
 def cmd_migrate_run(args):
-    _, _, workspace = get_auth()
+    _, _, workspace, _ = get_auth()
     if not workspace:
         print("Error: BB_WORKSPACE no está configurado")
         sys.exit(1)
