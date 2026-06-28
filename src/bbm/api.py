@@ -31,7 +31,7 @@ def get_repos(workspace=None):
     dev_dir = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
     try:
         all_repos = []
-        repos_url = f"{BASE_URL}/repositories/{workspace}?pagelen=100"
+        repos_url = f"{BASE_URL}/repositories/{workspace}?pagelen=100&role=member"
 
         while repos_url:
             response = requests.get(repos_url, auth=auth, timeout=10)
@@ -256,6 +256,9 @@ def get_pullrequests(workspace, repo, state='OPEN', limit=50):
         r = requests.get(url, auth=auth, timeout=10)
         if r.status_code == 200:
             return r.json().get('values', [])
+        if r.status_code == 403:
+            print(f"  PRs 403 en {repo}: verificá que el token tenga scope 'pullrequest'")
+            return None
         print(f"  Error al obtener PRs: {r.status_code}")
         return None
     except Exception as e:
