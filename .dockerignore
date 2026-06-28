@@ -1,0 +1,10 @@
+.env
+.git/
+.gitignore
+.github/
+*.md
+docs/
+tests/
+__pycache__/
+*.pyc
+.DS_Store

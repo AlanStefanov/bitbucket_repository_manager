@@ -75,17 +75,27 @@ sudo apt update && sudo apt install python3 python3-pip git -y
 ```
 </details>
 
-### Configuración
-
-1. **Clona o descarga este repositorio**
-
-2. **Instala dependencias Python:**
+### Instalación Global (recomendado)
 
 ```bash
-pip install requests
+# Con pipx (recomendado)
+pipx install bbm
+
+# Con pip
+pip install bbm
+
+# Con Docker
+docker pull alanstefanov/bbm
+
+# Con Homebrew (futuro)
+# brew install alanstefanov/tap/bbm
 ```
 
-3. **Configura las credenciales de Bitbucket:**
+### Configuración
+
+1. **Clona o descarga este repositorio** (o usa la instalación global)
+
+2. **Configura las credenciales de Bitbucket:**
 
 Hay dos formas de configurar el token:
 
@@ -112,7 +122,7 @@ BB_WORKSPACE=tu-workspace
 export BB_TOKEN="tu_token_de_bitbucket"
 
 # O ejecuta directamente antes de correr el programa
-BB_TOKEN="tu_token_de_bitbucket" python3 repository_manager.py
+BB_TOKEN="tu_token_de_bitbucket" bbm
 ```
 
 > ⚠️ **Nota:** El archivo `.env` contiene información sensible y está excluido del repositorio (`gitignore`). Nunca compartas este archivo.
@@ -130,19 +140,32 @@ BB_TOKEN="tu_token_de_bitbucket" python3 repository_manager.py
 
 > 💡 ¿No tenés token? Mirá el [FAQ](#-faq--preguntas-frecuentes).
 
+#### Ejecución desde el repositorio (sin instalar)
+
+```bash
+./run.sh                  # Lanza la TUI
+./run.sh permissions list --repo repo-a   # Comando directo
+
+# O directamente con PYTHONPATH
+PYTHONPATH=src python3 -m bbm
+PYTHONPATH=src python3 -m bbm permissions list --repo repo-a
+```
+
 ---
 
 ## 📖 Uso
 
-### Ejecutar el programa
+### TUI — Explorador de Repositorios
 
 ```bash
+bbm
+# o desde el repo:
 ./run.sh
-# O directamente
-python3 repository_manager.py
 ```
 
-### Atajos de Teclado
+Navegá por tus repositorios, clonalos con un clic, filtrá por nombre.
+
+#### Atajos de Teclado
 
 | Tecla | Acción |
 |-------|--------|
@@ -154,18 +177,65 @@ python3 repository_manager.py
 | `r` | Refrescar lista de repositorios |
 | `q` | Salir |
 
+### CLI — Gestión Masiva de Permisos
+
+```bash
+# Listar permisos actuales de repos
+bbm permissions list --repo repo-a --repo repo-b
+
+# Otorgar permiso a un usuario en múltiples repos
+bbm permissions grant --user juan.perez --role WRITE --repo repo-a --repo repo-b
+
+# Revocar permiso
+bbm permissions revoke --user juan.perez --repo repo-a
+
+# Copiar permisos de un repo a otros
+bbm permissions copy --from repo-base --to repo-b --to repo-c
+
+# Sincronizar desde archivo CSV
+bbm permissions sync --file permisos.csv
+
+# Todas las operaciones soportan --dry-run
+bbm permissions grant --user juan.perez --role ADMIN --repo repo-a --dry-run
+```
+
+Formato del CSV para `sync`:
+
+```csv
+action,type,user,group,role,repos
+grant,user,juan.perez,,write,repo-a,repo-b
+grant,group,,developers,admin,repo-c
+revoke,user,maria,,,repo-a
+```
+
+### Docker
+
+```bash
+docker run --rm -it -v $PWD/.env:/app/.env alanstefanov/bbm
+docker run --rm -it -v $PWD/.env:/app/.env alanstefanov/bbm permissions list --repo repo-a
+```
+
 ---
 
 ## 🏗️ Estructura del Proyecto
 
 ```
-bitbucket-repo-manager/
-├── repository_manager.py   # Código principal de la aplicación
-├── run.sh                  # Script de ejecución
-├── .env                    # Tu configuración (NO subir a git)
-├── .env.example            # Ejemplo de configuración
-├── README.md               # Este archivo
-└── .gitignore              # Ignora archivos sensibles
+bbm/
+├── src/bbm/
+│   ├── __init__.py       # Versión del paquete
+│   ├── __main__.py       # python -m bbm
+│   ├── cli.py            # Entry point CLI (argparse)
+│   ├── config.py         # Carga de .env y validación
+│   ├── api.py            # Cliente API Bitbucket
+│   ├── tui.py            # Interfaz TUI (curses)
+│   └── permissions.py    # Feature: gestión masiva de permisos
+├── pyproject.toml         # Build config
+├── Dockerfile             # Imagen Docker
+├── publish.sh             # Publicación a PyPI / Docker / Brew
+├── run.sh                 # Ejecución desde el repo sin instalar
+├── .env.example           # Template de configuración
+├── repository_manager.py  # Script legacy (deprecated)
+└── docs/                  # Roadmap y user stories (local)
 ```
 
 ---
@@ -178,16 +248,14 @@ Por defecto, los repositorios se clonan en `~/bitbucket-repos`. Para cambiar est
 
 ```bash
 export DEV_DIR="/tu/directorio/de/proyectos"
-python3 repository_manager.py
+bbm
 ```
 
 ### Cambiar el workspace de Bitbucket
 
-Define el workspace via variable de entorno:
-
 ```bash
 export BB_WORKSPACE="tu-workspace"
-python3 repository_manager.py
+bbm
 ```
 
 ---
@@ -253,6 +321,31 @@ Ejecutá primero `cp .env.example .env` y completá los valores.
 ### ¿Funciona con Bitbucket Server (self-hosted)?
 
 No, esta herramienta usa la API de **Bitbucket Cloud** (api.bitbucket.org). Para Bitbucket Server necesitarías modificar la URL base de la API.
+
+### ¿Cómo uso la imagen de Docker?
+
+```bash
+# Montá tu .env y ejecutá
+docker run --rm -it -v $PWD/.env:/app/.env alanstefanov/bbm
+
+# Para comandos CLI
+docker run --rm -it -v $PWD/.env:/app/.env alanstefanov/bbm permissions list --repo mi-repo
+```
+
+### ¿Cómo instalo con pipx?
+
+```bash
+pipx install bbm
+bbm
+```
+
+### ¿Qué permisos debo configurar en el App Password?
+
+Para gestionar permisos necesitás estos scopes:
+- `repository:admin` — Lectura y escritura de permisos
+- `workspace:management` — Lectura de workspaces
+- `account:read` — Información de usuario
+- `repository:read` — Listar y clonar repos
 
 ---
 

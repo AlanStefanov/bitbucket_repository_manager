@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "bbm"
+version = "0.1.0"
+description = "Bitbucket Repository Manager — CLI/TUI suite for Bitbucket Cloud administration"
+readme = "README.md"
+authors = [{name = "Alan Stefanov", email = "alan.emanuel.stefanov@gmail.com"}]
+license = {text = "MIT"}
+requires-python = ">=3.8"
+dependencies = ["requests"]
+keywords = ["bitbucket", "cli", "tui", "devops", "repository-manager"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Environment :: Console :: Curses",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Version Control",
+    "Topic :: System :: Systems Administration",
+]
+
+[project.urls]
+Homepage = "https://github.com/AlanStefanov/bitbucket_repository_manager"
+Repository = "https://github.com/AlanStefanov/bitbucket_repository_manager"
+Issues = "https://github.com/AlanStefanov/bitbucket_repository_manager/issues"
+
+[project.scripts]
+bbm = "bbm.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
