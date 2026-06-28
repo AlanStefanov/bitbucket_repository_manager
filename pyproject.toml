@@ -15,7 +15,6 @@ dependencies = [
     "rich>=13.0.0",
     "requests",
     "pyyaml",
-    "textual-serve",
 ]
 keywords = ["bitbucket", "cli", "tui", "devops", "repository-manager"]
 classifiers = [

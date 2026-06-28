@@ -6,25 +6,20 @@ built with the [Textual](https://textual.textualize.io/) framework. It offers sc
 for repository exploration, mass permission management, PR auto-approval, project
 migration, smart archiving, and dependency analysis.
 
-Because it is a terminal app, it is served to the browser via `textual-serve`, which
-renders the TUI in a web terminal. This is what makes it visible in the Replit preview pane.
+This is a **pure TUI application** that runs directly in the terminal (Shell).
+No server, no web serving, no preview pane. Test it from the Shell tab.
 
 ## Architecture
 - **Language:** Python 3.11
 - **TUI framework:** Textual 8.x (`src/bbm/tui/`)
-- **Web serving:** `textual-serve` (`serve.py` at repo root)
 - **HTTP/API:** `requests` (Bitbucket Cloud REST API v2.0)
 - **Package layout:** `src/bbm/` (src-layout, configured in `pyproject.toml`)
-- **Entry points:**
-  - `python -m bbm` runs the TUI directly in a terminal
-  - `python serve.py` serves the TUI over HTTP on port 5000 (used by the workflow & deployment)
+- **Entry point:** `python -m bbm` or `./run.sh`
 
 ## Replit Setup
-- Workflow "Start application" runs `python serve.py` on port 5000 (webview).
-- `serve.py` binds host `0.0.0.0` and adds `src/` to `PYTHONPATH` so the subprocess
-  (`python -m bbm`) can import the `bbm` package.
-- Deployment target: `vm` (always-running, because textual-serve maintains persistent
-  websocket terminal sessions).
+- **No workflow** — this is a terminal app, not a web server.
+- Run it from the **Shell** tab: `./run.sh`
+- `run.sh` sets `PYTHONPATH=src` and sources `.env` if present.
 
 ## Configuration
 The app reads Bitbucket credentials from environment variables (or a `.env` file at the
