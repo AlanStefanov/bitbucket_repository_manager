@@ -122,19 +122,13 @@ BB_TOKEN="tu_token_de_bitbucket" python3 repository_manager.py
 | Variable | Obligatorio | Descripción |
 |----------|-------------|-------------|
 | `BB_TOKEN` | ✅ Sí | Token de acceso personal de Bitbucket |
-| `BB_USERNAME` | ✅ Sí | Email o username de Bitbucket para autenticación |
+| `BB_USERNAME` | ✅ Sí | Email o username de Bitbucket |
 | `BB_WORKSPACE` | ✅ Sí | Workspace de Bitbucket (ej: `mi-empresa`) |
 | `DEV_DIR` | ❌ No | Directorio donde clonar repos (defecto: `~/bitbucket-repos`) |
-| `GIT_USER_NAME` | ❌ No | Nombre para git config en clones (defecto: `Your Name`) |
-| `GIT_USER_EMAIL` | ❌ No | Email para git config en clones (defecto: `your-email@example.com`) |
+| `GIT_USER_NAME` | ❌ No | Nombre para git config en clones |
+| `GIT_USER_EMAIL` | ❌ No | Email para git config en clones |
 
-#### ¿Cómo obtener tu token de Bitbucket?
-
-1. Ve a **Bitbucket Settings** → **Personal access tokens**
-2. Crea un nuevo token con los siguientes permisos:
-   - `repo:read` - Lectura de repositorios
-   - `workspace:read` - Lectura de workspaces
-   - `read:user` - Lectura de información de usuario
+> 💡 ¿No tenés token? Mirá el [FAQ](#-faq--preguntas-frecuentes).
 
 ---
 
@@ -198,27 +192,67 @@ python3 repository_manager.py
 
 ---
 
-## 🐛 Solución de Problemas
+## ❓ FAQ — Preguntas Frecuentes
 
-### Error: "BB_TOKEN no está configurado"
+### ¿Cómo obtengo un token de Bitbucket?
 
-Asegúrate de tener el token configurado:
+1. Ve a **Bitbucket Settings** → **Personal access tokens** (o https://bitbucket.org/account/settings/app-passwords/)
+2. Creá un nuevo token con estos permisos mínimos:
+   - `repository:read` — Listar y clonar repos
+   - `workspace:management` — Leer workspaces
+   - `account:read` — Información de usuario
+3. Copiá el token generado y ponelo en tu `.env`
+
+### ¿Cómo uso el archivo `.env`?
+
 ```bash
-# Opción 1: Verifica que el archivo .env existe
-cat .env
-
-# Opción 2: O exporta la variable manualmente
-export BB_TOKEN="tu_token"
+cp .env.example .env
+# Editá .env y reemplazá las variables con tus datos
 ./run.sh
 ```
 
-### Error: 401 - Unauthorized
+El `run.sh` lo carga automáticamente.
 
-Tu token puede haber expirado. Genera uno nuevo en Bitbucket y actualiza la variable `BB_TOKEN`.
+### ¿Y si prefiero variables de entorno?
 
-### Error: 403 - Forbidden
+```bash
+export BB_TOKEN="tu_token"
+export BB_USERNAME="tu-email@example.com"
+export BB_WORKSPACE="tu-workspace"
+./run.sh
+```
 
-El token necesita permisos de lectura. Verifica que tenga los scopes `repo:read` y `workspace:read`.
+Agregá los `export` a tu `~/.bashrc` o `~/.zshrc` para persistencia.
+
+### ¿Por qué `.env` no está en el repositorio?
+
+El `.env` contiene tokens y credenciales personales. Está en `.gitignore` para evitar subirlo por accidente. Siempre usá `.env.example` como template.
+
+### Error: "BB_TOKEN no está configurado"
+
+No encontró el token. Verificá:
+```bash
+cat .env                          # ¿Existe y tiene el token?
+source .env && echo $BB_TOKEN     # ¿Se carga bien?
+export BB_TOKEN="tu_token"        # O pasalo directo
+./run.sh
+```
+
+### Error: 401 Unauthorized
+
+El token es inválido o expiró. Generá uno nuevo en Bitbucket y actualizá `BB_TOKEN`.
+
+### Error: 403 Forbidden
+
+El token no tiene los permisos necesarios. Verificá que tenga `repository:read` y `workspace:management`.
+
+### Error: "No such file or directory: .env"
+
+Ejecutá primero `cp .env.example .env` y completá los valores.
+
+### ¿Funciona con Bitbucket Server (self-hosted)?
+
+No, esta herramienta usa la API de **Bitbucket Cloud** (api.bitbucket.org). Para Bitbucket Server necesitarías modificar la URL base de la API.
 
 ---
 
