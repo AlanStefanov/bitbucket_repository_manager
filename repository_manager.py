@@ -19,7 +19,7 @@ def load_env_file():
 
 load_env_file()
 
-USERNAME = os.environ.get("BB_WORKSPACE", "your-workspace")
+BB_WORKSPACE = os.environ.get("BB_WORKSPACE")
 DEV_DIR = os.environ.get("DEV_DIR", os.path.join(os.path.expanduser("~"), "bitbucket-repos"))
 BB_TOKEN = os.environ.get("BB_TOKEN")
 BB_AUTH = (os.environ.get("BB_USERNAME"), BB_TOKEN) if BB_TOKEN else (None, None)
@@ -29,10 +29,18 @@ def get_repos():
         print("Error: BB_TOKEN no está configurado")
         print("Exporta el token: export BB_TOKEN='tu_token_aqui'")
         return []
+    if not BB_AUTH[0]:
+        print("Error: BB_USERNAME no está configurado")
+        print("Defínelo en .env o via export: export BB_USERNAME='tu-email@example.com'")
+        return []
+    if not BB_WORKSPACE:
+        print("Error: BB_WORKSPACE no está configurado")
+        print("Defínelo en .env o via export: export BB_WORKSPACE='mi-workspace'")
+        return []
     try:
         all_repos = []
         
-        repos_url = f"https://api.bitbucket.org/2.0/repositories/{USERNAME}?pagelen=100"
+        repos_url = f"https://api.bitbucket.org/2.0/repositories/{BB_WORKSPACE}?pagelen=100"
         
         while repos_url:
             response = requests.get(repos_url, auth=BB_AUTH, timeout=10)
@@ -49,8 +57,8 @@ def get_repos():
                 all_repos.append({
                     'name': repo['name'],
                     'url': repo['links']['html']['href'],
-                    'workspace': USERNAME,
-                    'ws_slug': USERNAME,
+                    'workspace': BB_WORKSPACE,
+                    'ws_slug': BB_WORKSPACE,
                     'updated': updated_dt,
                     'updated_str': updated[:10] if updated else 'N/A'
                 })
@@ -68,7 +76,7 @@ def is_cloned(repo_name):
     return os.path.exists(target_dir) and os.path.isdir(os.path.join(target_dir, '.git'))
 
 def clone_repo(repo_name, ws_slug=None):
-    repo_url = f"git@bitbucket.org:{ws_slug or USERNAME}/{repo_name}.git"
+    repo_url = f"git@bitbucket.org:{ws_slug or BB_WORKSPACE}/{repo_name}.git"
     target_dir = os.path.join(DEV_DIR, repo_name)
     
     if os.path.exists(target_dir):

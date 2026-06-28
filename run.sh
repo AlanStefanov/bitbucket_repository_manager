@@ -1,10 +1,11 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-if [ -z "$BB_TOKEN" ]; then
-    if [ -f .env ]; then
-        source .env
-    fi
+# Cargar .env siempre (las env vars ya exportadas toman prioridad)
+if [ -f .env ]; then
+    set -a
+    source .env
+    set +a
 fi
 
 if [ -z "$BB_TOKEN" ]; then
