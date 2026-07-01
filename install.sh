@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — Instalador rápido de BRM
+# install.sh — Instalador rápido de BBM
 # Baja el script y lo ejecuta directamente con python, sin pip/pipx
 #
 # Uso:
@@ -12,7 +12,7 @@ set -euo pipefail
 REPO_URL="https://github.com/AlanStefanov/bitbucket_repository_manager"
 SCRIPT="repository_manager.py"
 
-echo "==> BRM — Bitbucket Repository Manager"
+echo "==> BBM — Bitbucket Repository Manager"
 echo ""
 
 # 1. Verificar python
@@ -47,5 +47,5 @@ fi
 
 # 4. Ejecutar
 echo ""
-echo "==> Iniciando BRM..."
+echo "==> Iniciando BBM..."
 exec python3 "${TMPFILE}"

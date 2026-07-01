@@ -192,7 +192,7 @@ def config_screen(stdscr):
 
     while True:
         stdscr.clear()
-        title = "BRM — Configuración Inicial"
+        title = "BBM — Configuración Inicial"
         try:
             stdscr.addstr(1, (w - len(title)) // 2, title, curses.A_BOLD)
         except curses.error:
