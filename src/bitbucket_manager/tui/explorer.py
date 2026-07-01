@@ -7,14 +7,14 @@ from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Footer, Static
 
-from bbm.api import (
+from bitbucket_manager.api import (
     checkout_repo,
     clone_repo,
     get_repo_branches,
     get_repos,
     pull_repo,
 )
-from bbm.config import get_auth
+from bitbucket_manager.config import get_auth
 
 
 class ExplorerScreen(Screen):

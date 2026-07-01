@@ -11,9 +11,11 @@ from .pr_screen import PRScreen
 from .migration_screen import MigrationScreen
 from .archive_screen import ArchiveScreen
 from .deps_screen import DepsScreen
+from .groups_screen import GroupsScreen
+from .members_screen import MembersScreen
 
 
-class BBMApp(App):
+class BitbucketManagerApp(App):
     CSS_PATH = "styles.tcss"
     SCREENS = {
         "boot": BootScreen,
@@ -25,9 +27,11 @@ class BBMApp(App):
         "migration": MigrationScreen,
         "archive": ArchiveScreen,
         "deps": DepsScreen,
+        "groups": GroupsScreen,
+        "members": MembersScreen,
     }
 
-    TITLE = "BRM — Bitbucket Repository Manager"
+    TITLE = "Bitbucket Manager"
     BINDINGS = [
         ("ctrl+q", "quit", "Salir"),
     ]
@@ -37,5 +41,5 @@ class BBMApp(App):
 
 
 def run_tui() -> None:
-    app = BBMApp()
+    app = BitbucketManagerApp()
     app.run()

@@ -5,8 +5,8 @@ from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import DataTable, Footer, Static
 
-from bbm.api import get_repos, get_pullrequests
-from bbm.config import get_auth
+from bitbucket_manager.api import get_repos, get_pullrequests
+from bitbucket_manager.config import get_auth
 
 
 class DashboardScreen(Screen):

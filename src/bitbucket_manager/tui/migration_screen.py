@@ -5,8 +5,8 @@ from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Footer, Input, Label, Select, Static
 
-from bbm.api import get_branches, get_pullrequests, get_repos, get_repository
-from bbm.config import get_auth
+from bitbucket_manager.api import get_branches, get_pullrequests, get_repos, get_repository
+from bitbucket_manager.config import get_auth
 
 
 class MigrationScreen(Screen):
@@ -127,7 +127,7 @@ class MigrationScreen(Screen):
         self._status(f"[yellow]Migrando {repo} → {target}...[/]")
         self._show(f"[yellow]Creando repositorio en {target}...[/]")
 
-        from bbm.api import create_repository
+        from bitbucket_manager.api import create_repository
         ok, result = create_repository(target, repo)
         if not ok:
             self._show(f"[red]✗ Error al crear repo: {result}[/]")
@@ -136,7 +136,7 @@ class MigrationScreen(Screen):
 
         clone_url = f"https://bitbucket.org/{workspace}/{repo}.git"
         push_url = f"https://bitbucket.org/{target}/{repo}.git"
-        dest = f"/tmp/bbm-migrate-{repo}"
+        dest = f"/tmp/bitbucket-manager-migrate-{repo}"
 
         self._show(f"[yellow]Clonando mirror...[/]")
         try:

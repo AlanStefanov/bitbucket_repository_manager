@@ -3,7 +3,7 @@ requires = ["setuptools>=64.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bbm"
+name = "bitbucket-manager"
 version = "0.1.0"
 description = "Bitbucket Repository Manager — TUI para administración de Bitbucket Cloud"
 readme = "README.md"
@@ -16,7 +16,7 @@ dependencies = [
     "requests",
     "pyyaml",
 ]
-keywords = ["bitbucket", "cli", "tui", "devops", "repository-manager"]
+keywords = ["bitbucket", "cli", "tui", "devops", "repository-manager", "group-management"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
@@ -33,12 +33,13 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/AlanStefanov/bitbucket_repository_manager"
-Repository = "https://github.com/AlanStefanov/bitbucket_repository_manager"
-Issues = "https://github.com/AlanStefanov/bitbucket_repository_manager/issues"
+Homepage = "https://github.com/AlanStefanov/bitbucket-manager"
+Repository = "https://github.com/AlanStefanov/bitbucket-manager"
+Issues = "https://github.com/AlanStefanov/bitbucket-manager/issues"
 
 [project.scripts]
-bbm = "bbm.tui:run_tui"
+bitbucket-manager = "bitbucket_manager.tui:run_tui"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+include = ["bitbucket_manager*"]

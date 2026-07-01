@@ -8,10 +8,18 @@ import curses
 import time
 from datetime import datetime
 
-CONFIG_DIR = os.path.expanduser("~/.config/bbm")
+CONFIG_DIR = os.path.expanduser("~/.config/bitbucket-manager")
 CONFIG_FILE = os.path.join(CONFIG_DIR, "env")
 
 def _load_env_file():
+    old_config = os.path.expanduser("~/.config/bbm/env")
+    if os.path.exists(old_config):
+        with open(old_config, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    os.environ.setdefault(key.strip(), value.strip())
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as f:
             for line in f:
@@ -112,7 +120,7 @@ def draw_menu(stdscr, repos, selected, cloned_status, search_query=""):
     stdscr.clear()
     h, w = stdscr.getmaxyx()
     
-    title = "REPOSITORY MANAGER - Bitbucket"
+    title = "BITBUCKET MANAGER"
     stdscr.addstr(0, (w - len(title)) // 2, title, curses.A_BOLD)
     stdscr.addstr(1, 0, "=" * (w - 1))
     stdscr.addstr(2, 0, f"{'#':<3} {'Nombre':<30} {'Proyecto':<22} {'Última act.':<10} {'Estado':<8}")
@@ -184,6 +192,7 @@ def config_screen(stdscr):
         ["BB_TOKEN", "", True],
         ["BB_USERNAME", "", False],
         ["BB_WORKSPACE", "", False],
+        ["DEV_DIR", os.path.expanduser("~/Documents/bitbucket-repos"), False],
     ]
     current_field = 0
     in_buttons = False
@@ -192,7 +201,7 @@ def config_screen(stdscr):
 
     while True:
         stdscr.clear()
-        title = "BRM — Configuración Inicial"
+        title = "Bitbucket Manager — Configuración Inicial"
         try:
             stdscr.addstr(1, (w - len(title)) // 2, title, curses.A_BOLD)
         except curses.error:

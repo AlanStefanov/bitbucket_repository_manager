@@ -5,14 +5,14 @@ from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Input, Label, Select, Static
 
-from bbm.api import (
+from bitbucket_manager.api import (
     delete_user_permission,
     get_permissions_groups,
     get_permissions_users,
     get_repos,
     set_user_permission,
 )
-from bbm.config import get_auth
+from bitbucket_manager.config import get_auth
 
 
 class PermissionsScreen(Screen):

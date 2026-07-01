@@ -7,4 +7,4 @@ if [ -f .env ]; then
     set +a
 fi
 
-PYTHONPATH="src:$PYTHONPATH" exec python3 -m bbm "$@"
+PYTHONPATH="src:$PYTHONPATH" exec python3 -m bitbucket_manager "$@"

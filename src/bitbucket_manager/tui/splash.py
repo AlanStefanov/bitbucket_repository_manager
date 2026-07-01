@@ -40,7 +40,7 @@ class BootScreen(Screen):
         yield Center(
             Vertical(
                 Static(LOGO, id="boot-brand"),
-                Static(f"[dim]v{VERSION} · Bitbucket Repository Manager (BRM)[/]", id="boot-sub"),
+                Static(f"[dim]v{VERSION} · Bitbucket Manager[/]", id="boot-sub"),
                 Static("", id="boot-bar"),
                 Static("", id="boot-msgs"),
                 id="boot-panel",
