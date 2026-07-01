@@ -9,8 +9,8 @@ from textual.containers import Horizontal
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Footer, Static
 
-from bbm.api import get_repos
-from bbm.config import get_auth
+from bitbucket_manager.api import get_repos
+from bitbucket_manager.config import get_auth
 
 
 class DepsScreen(Screen):

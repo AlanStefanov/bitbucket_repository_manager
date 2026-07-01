@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# install.sh — Instalador rápido de BRM
+# install.sh — Instalador de Bitbucket Manager
 # Baja el script y lo ejecuta directamente con python, sin pip/pipx
 #
 # Uso:
-#   bash <(curl -fsSL https://github.com/AlanStefanov/bitbucket_repository_manager/raw/main/install.sh)
+#   bash <(curl -fsSL https://github.com/AlanStefanov/bitbucket-manager/raw/main/install.sh)
 #   # O localmente:
 #   bash install.sh
 
 set -euo pipefail
 
-REPO_URL="https://github.com/AlanStefanov/bitbucket_repository_manager"
+REPO_URL="https://github.com/AlanStefanov/bitbucket-manager"
 SCRIPT="repository_manager.py"
 
-echo "==> BRM — Bitbucket Repository Manager"
+echo "==> Bitbucket Manager"
 echo ""
 
 # 1. Verificar python
@@ -47,5 +47,5 @@ fi
 
 # 4. Ejecutar
 echo ""
-echo "==> Iniciando BRM..."
+echo "==> Iniciando Bitbucket Manager..."
 exec python3 "${TMPFILE}"

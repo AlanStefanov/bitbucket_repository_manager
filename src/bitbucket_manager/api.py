@@ -3,7 +3,7 @@ import subprocess
 import requests
 from datetime import datetime, timezone
 
-from bbm.config import get_auth, load_env_file
+from bitbucket_manager.config import get_auth, load_env_file
 
 load_env_file()
 
@@ -367,6 +367,114 @@ def upsert_workspace_project(workspace, project_key, name, description=""):
         if r.status_code in (200, 201):
             return r.json()
         print(f"  Error al crear/actualizar proyecto: {r.status_code}")
+        return None
+    except Exception as e:
+        print(f"  Error de conexión: {e}")
+        return None
+
+
+# ─── Groups ──────────────────────────────────────────────────────────────────
+
+def get_workspace_groups(workspace):
+    auth = _http_auth()
+    if not auth:
+        return None
+    url = f"{BASE_URL}/workspaces/{workspace}/groups"
+    try:
+        r = requests.get(url, auth=auth, timeout=10)
+        if r.status_code == 200:
+            return r.json().get('values', [])
+        print(f"  Error al obtener grupos: {r.status_code}")
+        return None
+    except Exception as e:
+        print(f"  Error de conexión: {e}")
+        return None
+
+
+def create_workspace_group(workspace, name):
+    auth = _http_auth()
+    if not auth:
+        return False, "Credenciales no configuradas"
+    url = f"{BASE_URL}/workspaces/{workspace}/groups"
+    try:
+        r = requests.post(url, auth=auth, json={"name": name}, timeout=10)
+        if r.status_code in (200, 201):
+            return True, r.json()
+        return False, f"HTTP {r.status_code}: {r.text[:200]}"
+    except Exception as e:
+        return False, str(e)
+
+
+def delete_workspace_group(workspace, group_slug):
+    auth = _http_auth()
+    if not auth:
+        return False, "Credenciales no configuradas"
+    url = f"{BASE_URL}/workspaces/{workspace}/groups/{group_slug}"
+    try:
+        r = requests.delete(url, auth=auth, timeout=10)
+        if r.status_code in (200, 204):
+            return True, None
+        return False, f"HTTP {r.status_code}: {r.text[:200]}"
+    except Exception as e:
+        return False, str(e)
+
+
+def get_group_members(workspace, group_slug):
+    auth = _http_auth()
+    if not auth:
+        return None
+    url = f"{BASE_URL}/workspaces/{workspace}/groups/{group_slug}/members"
+    try:
+        r = requests.get(url, auth=auth, timeout=10)
+        if r.status_code == 200:
+            return r.json().get('values', [])
+        print(f"  Error al obtener miembros del grupo: {r.status_code}")
+        return None
+    except Exception as e:
+        print(f"  Error de conexión: {e}")
+        return None
+
+
+def add_group_member(workspace, group_slug, member):
+    auth = _http_auth()
+    if not auth:
+        return False, "Credenciales no configuradas"
+    url = f"{BASE_URL}/workspaces/{workspace}/groups/{group_slug}/members/{member}"
+    try:
+        r = requests.put(url, auth=auth, timeout=10)
+        if r.status_code in (200, 201, 204):
+            return True, None
+        return False, f"HTTP {r.status_code}: {r.text[:200]}"
+    except Exception as e:
+        return False, str(e)
+
+
+def remove_group_member(workspace, group_slug, member):
+    auth = _http_auth()
+    if not auth:
+        return False, "Credenciales no configuradas"
+    url = f"{BASE_URL}/workspaces/{workspace}/groups/{group_slug}/members/{member}"
+    try:
+        r = requests.delete(url, auth=auth, timeout=10)
+        if r.status_code in (200, 204):
+            return True, None
+        return False, f"HTTP {r.status_code}: {r.text[:200]}"
+    except Exception as e:
+        return False, str(e)
+
+
+# ─── Members ─────────────────────────────────────────────────────────────────
+
+def get_workspace_members(workspace):
+    auth = _http_auth()
+    if not auth:
+        return None
+    url = f"{BASE_URL}/workspaces/{workspace}/members"
+    try:
+        r = requests.get(url, auth=auth, timeout=10)
+        if r.status_code == 200:
+            return r.json().get('values', [])
+        print(f"  Error al obtener miembros del workspace: {r.status_code}")
         return None
     except Exception as e:
         print(f"  Error de conexión: {e}")

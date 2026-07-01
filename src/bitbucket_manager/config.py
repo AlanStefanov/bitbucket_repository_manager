@@ -3,7 +3,8 @@ import os
 def load_env_file():
     env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.env')
     alt_path = os.path.join(os.path.expanduser("~"), ".bbm", ".env")
-    for path in [env_path, alt_path]:
+    new_path = os.path.join(os.path.expanduser("~"), ".config", "bitbucket-manager", "env")
+    for path in [env_path, alt_path, new_path]:
         if os.path.exists(path):
             with open(path, 'r') as f:
                 for line in f:
@@ -18,8 +19,15 @@ def get_auth():
     workspace = os.environ.get("BB_WORKSPACE")
     return token, username, workspace
 
+def get_config():
+    token = os.environ.get("BB_TOKEN")
+    username = os.environ.get("BB_USERNAME")
+    workspace = os.environ.get("BB_WORKSPACE")
+    dev_dir = os.environ.get("DEV_DIR", os.path.expanduser("~/Documents/bitbucket-repos"))
+    return token, username, workspace, dev_dir
+
 def validate_env():
-    token, username, workspace = get_auth()
+    token, username, workspace, dev_dir = get_config()
     errors = []
     if not token:
         errors.append("BB_TOKEN no está configurado. Exportalo o creá un .env")

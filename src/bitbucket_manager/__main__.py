@@ -1,4 +1,4 @@
-from bbm.tui import run_tui
+from bitbucket_manager.tui import run_tui
 
 if __name__ == "__main__":
     run_tui()

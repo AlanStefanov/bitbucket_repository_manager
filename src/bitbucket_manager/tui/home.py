@@ -12,6 +12,8 @@ from ..version import VERSION
 CARDS: list[tuple[str, str, str, str]] = [
     ("📊", "Dashboard", "Resumen del workspace para devs y líderes", "dashboard"),
     ("📦", "Repos", "Explorar y clonar repositorios del workspace", "explorer"),
+    ("👥", "Grupos", "Gestionar grupos y sus miembros", "groups"),
+    ("👤", "Miembros", "Ver miembros del workspace", "members"),
     ("🔐", "Permisos", "Gestionar accesos de usuarios por repositorio", "permissions"),
     ("✅", "PRs", "Auto-aprobar Pull Requests con reglas", "pr"),
     ("📋", "Migración", "Migrar repos entre workspaces", "migration"),
@@ -41,6 +43,8 @@ class FeatureCard(Vertical):
     def _go(self) -> None:
         from .dashboard_screen import DashboardScreen
         from .explorer import ExplorerScreen
+        from .groups_screen import GroupsScreen
+        from .members_screen import MembersScreen
         from .permissions_screen import PermissionsScreen
         from .pr_screen import PRScreen
         from .migration_screen import MigrationScreen
@@ -50,6 +54,8 @@ class FeatureCard(Vertical):
         screen_map = {
             "dashboard": DashboardScreen,
             "explorer": ExplorerScreen,
+            "groups": GroupsScreen,
+            "members": MembersScreen,
             "permissions": PermissionsScreen,
             "pr": PRScreen,
             "migration": MigrationScreen,
@@ -73,6 +79,8 @@ class HomeScreen(Screen):
         Binding("space", "open", "Abrir"),
         Binding("d", "go_dashboard", "Dashboard"),
         Binding("r", "go_explorer", "Repos"),
+        Binding("g", "go_groups", "Grupos"),
+        Binding("i", "go_members", "Miembros"),
         Binding("p", "go_permissions", "Permisos"),
         Binding("u", "go_pr", "PRs"),
         Binding("m", "go_migration", "Migración"),
@@ -102,7 +110,7 @@ class HomeScreen(Screen):
             "\n[bold #10b981]╚═════╝  ╚═╝  ╚═╝╚═╝     ╚═╝[/]",
             id="home-brand",
         )
-        yield Static(f"[dim]Bitbucket Repository Manager  v{VERSION}[/]", id="home-title")
+        yield Static(f"[dim]Bitbucket Manager  v{VERSION}[/]", id="home-title")
         for row in rows:
             yield row
         yield Footer()
@@ -205,6 +213,14 @@ class HomeScreen(Screen):
     def action_go_explorer(self) -> None:
         from .explorer import ExplorerScreen
         self.app.switch_screen(ExplorerScreen())
+
+    def action_go_groups(self) -> None:
+        from .groups_screen import GroupsScreen
+        self.app.switch_screen(GroupsScreen())
+
+    def action_go_members(self) -> None:
+        from .members_screen import MembersScreen
+        self.app.switch_screen(MembersScreen())
 
     def action_go_permissions(self) -> None:
         from .permissions_screen import PermissionsScreen

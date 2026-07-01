@@ -5,8 +5,8 @@ from textual.containers import Horizontal
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Footer, Static
 
-from bbm.api import approve_pullrequest, get_pullrequests, get_repos
-from bbm.config import get_auth
+from bitbucket_manager.api import approve_pullrequest, get_pullrequests, get_repos
+from bitbucket_manager.config import get_auth
 
 
 class PRScreen(Screen):
@@ -92,7 +92,7 @@ class PRScreen(Screen):
             for pr in prs:
                 pid = pr["id"]
                 participants = pr.get("participants", [])
-                already = any(p.get("approved") for p in participants if p.get("user", {}).get("nickname") != "bbm-auto")
+                already = any(p.get("approved") for p in participants if p.get("user", {}).get("nickname") != "bitbucket-manager-auto")
                 if already:
                     skipped += 1
                     table.add_row(repo["name"], str(pid), "[dim]ya aprobado[/]")

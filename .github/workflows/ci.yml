@@ -15,3 +15,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m py_compile repository_manager.py
+      - run: pip install .
+      - name: Check package import
+        run: python -c "from bitbucket_manager.tui import run_tui; print('OK')"

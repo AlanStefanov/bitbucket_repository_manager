@@ -1,15 +1,15 @@
 <div align="center">
 
-[![CI](https://github.com/AlanStefanov/bitbucket_repository_manager/actions/workflows/ci.yml/badge.svg)](https://github.com/AlanStefanov/bitbucket_repository_manager/actions/workflows/ci.yml)
+[![CI](https://github.com/AlanStefanov/bitbucket-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/AlanStefanov/bitbucket-manager/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Version](https://img.shields.io/badge/version-0.1.0--alpha-orange.svg)
 
 </div>
 
-# Bitbucket Repository Manager — `bbm`
+# Bitbucket Manager
 
-Suite **TUI** para administración masiva de repositorios Bitbucket Cloud. Navegación 100% por teclado, multiplataforma, instalable vía `pipx`, Docker o Homebrew.
+Suite **TUI** para administración de Bitbucket Cloud desde la terminal. Navegación 100% por teclado, multiplataforma, instalable vía `pipx`, `pip` o Homebrew.
 
 Inspirado en [opencode](https://opencode.ai) — interfaz de terminal moderna, reactiva y productiva.
 
@@ -19,9 +19,10 @@ Inspirado en [opencode](https://opencode.ai) — interfaz de terminal moderna, r
 
 - [Visión](#visión)
 - [Stack](#stack)
-- [Roadmap — User Stories](#roadmap--user-stories)
+- [Features](#features)
 - [Atajos de Teclado](#atajos-de-teclado)
 - [Instalación](#instalación)
+- [Configuración](#configuración)
 - [Publicación y Versionado](#publicación-y-versionado)
 - [Licencia](#licencia)
 
@@ -29,20 +30,20 @@ Inspirado en [opencode](https://opencode.ai) — interfaz de terminal moderna, r
 
 ## Visión
 
-De un explorador TUI simple a una **suite completa** para administrar Bitbucket Cloud desde la terminal:
+Administrar Bitbucket Cloud desde la terminal, sin tocar el navegador:
 
 | Feature | Estado |
 |---------|--------|
 | Dashboard de workspace | ✅ Listo |
 | Explorador + clonado de repos | ✅ Listo |
-| Gestión masiva de permisos | 🚧 En desarrollo |
+| Gestión masiva de permisos | ✅ Listo |
+| Gestión de grupos y miembros | ✅ Listo |
+| Miembros del workspace | ✅ Listo |
 | Auto-aprobación de PRs | 🚧 En desarrollo |
 | Migración entre proyectos | 🚧 En desarrollo |
 | Archivado inteligente | 🚧 En desarrollo |
 | Análisis de dependencias | 🚧 En desarrollo |
-| Publicación (PyPI, Docker, Brew) | 🚧 En desarrollo |
-
-Cada feature se despliega como una **pantalla TUI** accesible desde el menú principal, con operaciones masivas, dry-run y confirmación explícita.
+| Publicación (PyPI, Homebrew) | 🚧 En desarrollo |
 
 ---
 
@@ -54,82 +55,48 @@ Cada feature se despliega como una **pantalla TUI** accesible desde el menú pri
 | **HTTP / API** | `requests` — cliente REST para Bitbucket Cloud API v2.0 |
 | **YAML** | `pyyaml` — reglas de PR, archivado, dependencias |
 | **Terminal enhancements** | `rich` — logging, tablas, progreso |
-| **Distribución** | `pyproject.toml` → PyPI / `pipx` / Docker / Homebrew |
-
-### Por qué Textual
-
-- Async nativo (`asyncio`)
-- Estilos con TCSS (simil CSS, no curses)
-- Widgets modernos: `DataTable`, `Select`, `Input`, `Tree`
-- Hot-reload en desarrollo
-- Soporte para mouse + teclado
-- 24-bit color, emojis, renderizado rápido
+| **Distribución** | `pyproject.toml` → PyPI / `pipx` / Homebrew |
 
 ---
 
-## Roadmap — User Stories
+## Features
 
-### US1: Gestión Masiva de Permisos
+### 👥 Grupos
+- Listar todos los grupos del workspace
+- Crear y eliminar grupos
+- Agregar o remover miembros de un grupo
 
-Agregar, remover y sincronizar permisos de usuarios/grupos en N repositorios simultáneamente.
+### 👤 Miembros
+- Listar todos los miembros del workspace
+- Ver display name, nickname y account ID
 
-- Listar permisos actuales de uno o varios repos
-- Grant/revoke con rol (READ, WRITE, ADMIN)
-- Copiar permisos de un repo origen a N destinos
-- Sincronizar desde CSV/YAML
-- Modo dry-run en todas las operaciones
+### 📊 Dashboard
+- Métricas del workspace: total de repos, PRs abiertos, activida reciente
 
-### US2: Auto-aprobación de PRs
+### 📦 Repos
+- Explorar repositorios del workspace
+- Clonar, pull y checkout desde la TUI
 
-Reglas configurables en YAML para aprobar PRs automáticamente según branch, autor, etiquetas, archivos tocados.
+### 🔐 Permisos
+- Listar permisos de usuarios y grupos por repositorio
+- Otorgar y revocar permisos
 
-- Reglas por branch origen/destino, autor, labels, file pattern
-- Modo supervisado: agrupa candidatos y muestra antes de aprobar
-- Reporte de PRs aprobados/rechazados por regla
-- Config persistente en `pr_rules.yaml`
+### ✅ PRs
+- Listar PRs abiertos
+- Auto-aprobar PRs
 
-### US3: Migración entre Proyectos
+### 📋 Migración
+- Migrar repositorios entre workspaces manteniendo historial git
 
-Migrar repos entre workspaces preservando historial git, branches, tags y PRs abiertos.
+### 🗄️ Archive
+- Archivar repositorios inactivos según reglas configurables
 
-- Plan de migración preview
-- Push mirror con git
-- Re-creación de branch protections y webhooks
-- Rollback ante fallo parcial
-
-### US4: Archivado Inteligente
-
-Archivar repositorios inactivos según reglas configurables (último commit, PRs abandonados, N meses sin actividad).
-
-- Escaneo de candidatos por antigüedad
-- Archivado batch con confirmación
-- Preservación de config para restauración
-- Restaurar repos archivados
-
-### US5: Análisis de Dependencias Cruzadas
-
-Escanear dependencias entre repos del workspace mediante patrones de import en código fuente.
-
-- Grafo de dependencias (árbol / lista)
-- Detección de repos huérfanos (sin deps in/out)
-- Detección de ciclos
-- Reporte de impacto ante migración/archivado
-
-### US6: Publicación
-
-Distribuir `bbm` en los 3 canales principales para que cualquier admin lo instale en segundos.
-
-| Canal | Comando |
-|-------|---------|
-| PyPI / pipx | `pipx install bbm` |
-| Docker Hub | `docker pull alanstefanov/bbm` |
-| Homebrew | `brew install alanstefanov/tap/bbm` |
+### 🔗 Deps
+- Analizar dependencias entre repos del workspace
 
 ---
 
 ## Atajos de Teclado
-
-La app está diseñada para uso 100% con teclado. Sin mouse requerido.
 
 ### Pantalla de inicio (Home)
 
@@ -141,34 +108,21 @@ La app está diseñada para uso 100% con teclado. Sin mouse requerido.
 | `Enter` / `Space` | Abrir pantalla seleccionada |
 | `D` | Dashboard |
 | `R` | Repos |
+| `G` | Grupos |
+| `I` | Miembros |
 | `P` | Permisos |
 | `U` | PRs |
 | `M` | Migración |
 | `A` | Archive |
 | `S` | Dependencias |
-| `Q` | Salir de la app |
-| `Esc` | Salir de la app |
-| `Ctrl+Q` | Salir de la app |
+| `Q` / `Esc` / `Ctrl+Q` | Salir |
 
 ### Pantallas de feature
 
 | Tecla | Acción |
 |-------|--------|
-| `H` | Volver al menú principal |
-| `Esc` | Volver al menú principal |
+| `H` / `Esc` | Volver al menú principal |
 | `Ctrl+Q` | Salir de la app |
-| `Tab` / `Shift+Tab` | Navegar entre controles |
-| `Ctrl+R` | Refrescar (Explorer / Dashboard) |
-
-### Controles comunes
-
-| Widget | Interacción |
-|--------|-------------|
-| `Input` | Escribir texto, `Enter` para confirmar |
-| `Select` | `↑↓` + `Enter` para elegir opción |
-| `DataTable` | `↑↓` para navegar filas |
-| `Button` | `Enter` o `Space` para accionar |
-| `Checkbox` | `Space` para toggle |
 
 ---
 
@@ -177,50 +131,52 @@ La app está diseñada para uso 100% con teclado. Sin mouse requerido.
 ### pipx (recomendado)
 
 ```bash
-pipx install bbm
-bbm
+pipx install bitbucket-manager
+bitbucket-manager
 ```
 
 ### pip
 
 ```bash
-pip install bbm
-bbm
+pip install bitbucket-manager
+bitbucket-manager
 ```
 
-### Docker
+### Homebrew (futuro)
 
 ```bash
-docker run --rm -it \
-  -v $PWD/.env:/app/.env \
-  alanstefanov/bbm
+brew install alanstefanov/tap/bitbucket-manager
 ```
 
-### Homebrew
+### One-liner (curses ligero)
 
 ```bash
-brew install alanstefanov/tap/bbm
-bbm
+bash <(curl -fsSL https://github.com/AlanStefanov/bitbucket-manager/raw/main/install.sh)
 ```
 
-### Configuración rápida
+---
+
+## Configuración
+
+La primera vez que ejecutes la app, te mostrará una pantalla interactiva para ingresar las credenciales.
+
+O podés crear un archivo `~/.config/bitbucket-manager/env`:
 
 ```bash
-cp .env.example .env
-# Editar .env con: BB_USERNAME, BB_TOKEN, BB_WORKSPACE
-bbm
+BB_USERNAME=tu-email@example.com
+BB_TOKEN=tu_api_token
+BB_WORKSPACE=mi-workspace
+DEV_DIR=/home/tu/Documents/bitbucket-repos
 ```
-
-O simplemente ejecutá `bbm` y la primera vez te mostrará una pantalla interactiva para ingresar los datos. Se guardan en `~/.config/bbm/env`.
 
 Variables requeridas:
 
 | Variable | Descripción |
 |----------|-------------|
-| `BB_USERNAME` | Email de Atlassian (NO username de Bitbucket) |
+| `BB_USERNAME` | Email de Atlassian |
 | `BB_TOKEN` | API Token desde https://id.atlassian.com/manage-profile/security/api-tokens |
 | `BB_WORKSPACE` | Workspace de Bitbucket (ej: `mi-empresa`) |
-| `DEV_DIR` | Directorio para clones (opcional, defecto: `~/bitbucket-repos`) |
+| `DEV_DIR` | Directorio para clones (defecto: `~/Documents/bitbucket-repos`) |
 
 ### Ejecución desde el repo
 
@@ -228,48 +184,22 @@ Variables requeridas:
 ./run.sh
 ```
 
-Si borrás `~/.config/bbm/env` la app te mostrará la pantalla de configuración inicial nuevamente.
-
 ---
 
 ## Publicación y Versionado
 
 ### Versionado Semántico
 
-`bbm` sigue [SemVer](https://semver.org/): `MAJOR.MINOR.PATCH`.
+`bitbucket-manager` sigue [SemVer](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
-- **MAJOR**: cambios incompatibles en API/UI
-- **MINOR**: nuevas features (backward-compatible)
-- **PATCH**: bugfixes, performance, docs
+La versión se define en `src/bitbucket_manager/__init__.py` y se refleja en `pyproject.toml`.
 
-La versión se define en `src/bbm/__init__.py` y se refleja en `pyproject.toml`.
-
-### Release automática
+### Release
 
 Al hacer merge de un PR a `main`:
 
-1. **CI** corre lint + typecheck + tests
-2. **GitHub Actions** (o script manual) etiqueta con `v{version}`
-3. Se publica automáticamente a:
-   - **PyPI** via `twine`
-   - **Docker Hub** via `docker buildx + push`
-   - **Homebrew** actualizando la fórmula en `homebrew-tap`
-
-### Pipeline actual
-
-```yaml
-# .github/workflows/release.yml (futuro)
-on:
-  push:
-    branches: [main]
-
-jobs:
-  release:
-    - build & publish to PyPI
-    - build & push Docker image
-    - update Homebrew formula
-    - create GitHub Release
-```
+1. **CI** corre lint + verifica que el paquete importe correctamente
+2. Ejecutar `bash publish.sh` para publicar a PyPI y Homebrew
 
 ---
 
