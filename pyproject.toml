@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bitbucket-manager"
-version = "0.1.0"
+version = "0.4.1"
 description = "Bitbucket Repository Manager — TUI para administración de Bitbucket Cloud"
 readme = "README.md"
 authors = [{name = "Alan Stefanov", email = "alan.emanuel.stefanov@gmail.com"}]

@@ -3,7 +3,7 @@
 [![CI](https://github.com/AlanStefanov/bitbucket-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/AlanStefanov/bitbucket-manager/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Version](https://img.shields.io/badge/version-0.1.0--alpha-orange.svg)
+![Version](https://img.shields.io/badge/version-0.4.1-blue.svg)
 
 </div>
 
@@ -23,6 +23,7 @@ Inspirado en [opencode](https://opencode.ai) — interfaz de terminal moderna, r
 - [Atajos de Teclado](#atajos-de-teclado)
 - [Instalación](#instalación)
 - [Configuración](#configuración)
+- [FAQ](#faq)
 - [Publicación y Versionado](#publicación-y-versionado)
 - [Licencia](#licencia)
 
@@ -34,16 +35,16 @@ Administrar Bitbucket Cloud desde la terminal, sin tocar el navegador:
 
 | Feature | Estado |
 |---------|--------|
-| Dashboard de workspace | ✅ Listo |
-| Explorador + clonado de repos | ✅ Listo |
-| Gestión masiva de permisos | ✅ Listo |
-| Gestión de grupos y miembros | ✅ Listo |
-| Miembros del workspace | ✅ Listo |
-| Auto-aprobación de PRs | 🚧 En desarrollo |
-| Migración entre proyectos | 🚧 En desarrollo |
-| Archivado inteligente | 🚧 En desarrollo |
-| Análisis de dependencias | 🚧 En desarrollo |
-| Publicación (PyPI, Homebrew) | 🚧 En desarrollo |
+| Dashboard de workspace | ✅ |
+| Explorador + clonado de repos | ✅ |
+| Gestión masiva de permisos | ✅ |
+| Gestión de grupos y miembros | ✅ |
+| Miembros del workspace | ✅ |
+| Migración entre proyectos | ✅ |
+| Archivado inteligente | ✅ |
+| Análisis de dependencias | ✅ |
+| Publicación (PyPI, Homebrew) | ✅ |
+| Auto-aprobación masiva de PRs | 🚧 |
 
 ---
 
@@ -183,6 +184,13 @@ Variables requeridas:
 ```bash
 ./run.sh
 ```
+
+---
+
+## FAQ
+
+- [FAQ — English](FAQ.md)
+- [FAQ — Español](FAQ-es.md)
 
 ---
 
