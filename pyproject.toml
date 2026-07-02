@@ -38,6 +38,7 @@ Issues = "https://github.com/AlanStefanov/bitbucket-manager/issues"
 [project.scripts]
 bitbucket-manager = "bitbucket_manager.tui:run_tui"
 
+
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["bitbucket_manager*"]
