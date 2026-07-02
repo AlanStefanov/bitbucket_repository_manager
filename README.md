@@ -11,7 +11,7 @@
 
 Suite **TUI** para administración de Bitbucket Cloud desde la terminal. Navegación 100% por teclado, multiplataforma, instalable vía `pipx`, `pip` o Homebrew.
 
-Inspirado en [opencode](https://opencode.ai) — interfaz de terminal moderna, reactiva y productiva.
+Creado por [Alan Stefanov](https://www.astefanov.com) — [LinkedIn](https://linkedin.com/in/alanstefanov)
 
 ---
 
