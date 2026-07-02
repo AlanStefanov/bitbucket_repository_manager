@@ -40,7 +40,7 @@ if $DRY_RUN; then
 else
     if command -v brew &>/dev/null; then
         SHA=$(curl -sL "$TAR_URL" | shasum -a 256 | cut -d' ' -f1)
-        FORMULA_PATH="$HOME/repos/homebrew-tap/Formula/bitbucket-manager.rb"
+        FORMULA_PATH="$HOME/repos/bitbucket-manager/Formula/bitbucket-manager.rb"
         if [[ -f "$FORMULA_PATH" ]]; then
             sed -i "s/version \".*\"/version \"$VERSION\"/" "$FORMULA_PATH"
             sed -i "s/sha256 \".*\"/sha256 \"$SHA\"/" "$FORMULA_PATH"

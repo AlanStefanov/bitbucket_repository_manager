@@ -41,3 +41,13 @@ bitbucket-manager = "bitbucket_manager.tui:run_tui"
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["bitbucket_manager*"]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+version_variables = ["src/bitbucket_manager/__init__.py:__version__"]
+branch = "main"
+commit_message = "chore(release): {version}"
+major_on_zero = false
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = ["chore\\(", "docs\\(", "style\\("]
