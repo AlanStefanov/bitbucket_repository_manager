@@ -66,14 +66,21 @@ class BootScreen(Screen):
             await asyncio.sleep(0.07)
         if not self._done:
             await asyncio.sleep(0.25)
-        self._go_home()
+        self._go_home_or_setup()
 
-    def _go_home(self) -> None:
+    def _go_home_or_setup(self) -> None:
         if self._done:
             return
         self._done = True
-        from .home import HomeScreen
-        self.app.switch_screen(HomeScreen())
+        from .setup_screen import SetupScreen, config_is_missing
+        if config_is_missing():
+            self.app.push_screen(SetupScreen())
+        else:
+            from .home import HomeScreen
+            self.app.switch_screen(HomeScreen())
+
+    def _go_home(self) -> None:
+        self._go_home_or_setup()
 
     def action_skip(self) -> None:
         self._go_home()

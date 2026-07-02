@@ -13,6 +13,7 @@ from .archive_screen import ArchiveScreen
 from .deps_screen import DepsScreen
 from .groups_screen import GroupsScreen
 from .members_screen import MembersScreen
+from .setup_screen import SetupScreen
 
 
 class BitbucketManagerApp(App):
@@ -29,6 +30,7 @@ class BitbucketManagerApp(App):
         "deps": DepsScreen,
         "groups": GroupsScreen,
         "members": MembersScreen,
+        "setup": SetupScreen,
     }
 
     TITLE = "Bitbucket Manager"

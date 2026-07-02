@@ -356,6 +356,53 @@ Footer > .footer--description {
     color: #555;
 }
 
+/* ── Setup Screen ──────────────────────────────────────────── */
+#setup-root {
+    align: center middle;
+    height: 100%;
+}
+
+#setup-panel {
+    width: 50;
+    max-width: 90%;
+    height: auto;
+    border: solid #22d3ee;
+    background: #111;
+    padding: 2 3;
+}
+
+#setup-title {
+    text-style: bold;
+    text-align: center;
+    height: 2;
+    margin-bottom: 1;
+}
+
+#setup-subtitle {
+    text-align: center;
+    height: 1;
+    margin-bottom: 1;
+    color: #888;
+}
+
+.setup-actions {
+    height: auto;
+    margin-top: 2;
+    align: center middle;
+}
+
+.setup-actions Button {
+    min-width: 12;
+    margin: 0 1;
+}
+
+#setup-status {
+    color: #f59e0b;
+    text-align: center;
+    height: 1;
+    margin-top: 1;
+}
+
 /* ── Compact mode for home ──────────────────────────────── */
 .-compact .card {
     height: 6;

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bitbucket-manager"
-version = "0.4.3"
+version = "0.5.0"
 description = "Bitbucket Repository Manager — TUI para administración de Bitbucket Cloud"
 readme = "README.md"
 authors = [{name = "Alan Stefanov", email = "alan.emanuel.stefanov@gmail.com"}]
@@ -38,13 +38,12 @@ Issues = "https://github.com/AlanStefanov/bitbucket-manager/issues"
 [project.scripts]
 bitbucket-manager = "bitbucket_manager.tui:run_tui"
 
+[tool.setuptools.package-data]
+bitbucket_manager = ["tui/*.tcss", "py.typed"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["bitbucket_manager*"]
-
-[tool.setuptools.package-data]
-bitbucket_manager = ["tui/*.tcss", "py.typed"]
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
